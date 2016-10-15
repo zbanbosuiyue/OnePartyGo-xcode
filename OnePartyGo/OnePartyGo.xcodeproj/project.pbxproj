@@ -16,6 +16,7 @@
 		6303360A1D6222040051FAB8 /* MainExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630336041D6222040051FAB8 /* MainExtension.swift */; };
 		6303360C1D6222040051FAB8 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630336061D6222040051FAB8 /* MainViewController.swift */; };
 		6306897B1DA2D44100680D7E /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6306897A1DA2D44100680D7E /* Launch Screen.storyboard */; };
+		632913631DB2CE5C00BA7499 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 632913621DB2CE5C00BA7499 /* Assets.xcassets */; };
 		6351A8491D622A38009AD9A0 /* libWeChatSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6351A8451D622A38009AD9A0 /* libWeChatSDK.a */; };
 		6351A84C1D622CE1009AD9A0 /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 6351A84B1D622CE1009AD9A0 /* libsqlite3.0.tbd */; };
 		6351A84F1D62320F009AD9A0 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6351A84E1D62320F009AD9A0 /* CoreTelephony.framework */; };
@@ -36,7 +37,6 @@
 		6399C78A1D7A37CD00EC3171 /* CreateEmailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6399C7881D7A37CD00EC3171 /* CreateEmailViewController.xib */; };
 		63C695F91D5EA8DF0049AE3E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63C695F81D5EA8DF0049AE3E /* AppDelegate.swift */; };
 		63C6960E1D5EA8DF0049AE3E /* OnePartyGoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63C6960D1D5EA8DF0049AE3E /* OnePartyGoTests.swift */; };
-		63DB9D271DA6C14F00536FCD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 63DB9D261DA6C14F00536FCD /* Assets.xcassets */; };
 		7597A366196515CE3E08D807 /* Pods_OnePartyGo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E487DE0B74A376A6A11EE05E /* Pods_OnePartyGo.framework */; };
 		991CC589B081E9DA9E372FC3 /* Pods_OnePartyGoUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D298847DE8AF110FF01C7040 /* Pods_OnePartyGoUITests.framework */; };
 /* End PBXBuildFile section */
@@ -71,6 +71,7 @@
 		630336041D6222040051FAB8 /* MainExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainExtension.swift; sourceTree = "<group>"; };
 		630336061D6222040051FAB8 /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = MainViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		6306897A1DA2D44100680D7E /* Launch Screen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
+		632913621DB2CE5C00BA7499 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6351A8451D622A38009AD9A0 /* libWeChatSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libWeChatSDK.a; sourceTree = "<group>"; };
 		6351A8461D622A38009AD9A0 /* WechatAuthSDK.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WechatAuthSDK.h; sourceTree = "<group>"; };
 		6351A8471D622A38009AD9A0 /* WXApi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXApi.h; sourceTree = "<group>"; };
@@ -100,7 +101,6 @@
 		63C6960F1D5EA8DF0049AE3E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		63C696141D5EA8DF0049AE3E /* OnePartyGoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OnePartyGoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		63DB9D241DA310B900536FCD /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		63DB9D261DA6C14F00536FCD /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		63E0360D1DB2A61000EE9A0E /* OnePartyGo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OnePartyGo.entitlements; sourceTree = "<group>"; };
 		C647644FFFFB466AEC62E702 /* Pods-OnePartyGoUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OnePartyGoUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-OnePartyGoUITests/Pods-OnePartyGoUITests.release.xcconfig"; sourceTree = "<group>"; };
 		D298847DE8AF110FF01C7040 /* Pods_OnePartyGoUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OnePartyGoUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -258,7 +258,7 @@
 			isa = PBXGroup;
 			children = (
 				6351A84A1D622A51009AD9A0 /* OnePartyGo-Bridging-Header.h */,
-				63DB9D261DA6C14F00536FCD /* Assets.xcassets */,
+				632913621DB2CE5C00BA7499 /* Assets.xcassets */,
 				63C695F71D5EA8DF0049AE3E /* OnePartyGo */,
 				63C6960C1D5EA8DF0049AE3E /* OnePartyGoTests */,
 				63C695F61D5EA8DF0049AE3E /* Products */,
@@ -424,8 +424,8 @@
 				6306897B1DA2D44100680D7E /* Launch Screen.storyboard in Resources */,
 				6399C78A1D7A37CD00EC3171 /* CreateEmailViewController.xib in Resources */,
 				6397F6C91D7F8B0400BC3ABC /* LoginEnterPwdViewController.xib in Resources */,
-				63DB9D271DA6C14F00536FCD /* Assets.xcassets in Resources */,
 				6397F6C51D7F246D00BC3ABC /* CreatePasswordViewController.xib in Resources */,
+				632913631DB2CE5C00BA7499 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
