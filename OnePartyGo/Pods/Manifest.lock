@@ -1,5 +1,5 @@
 PODS:
-  - Alamofire (3.5.0)
+  - Alamofire (3.5.1)
   - Bolts (1.8.4):
     - Bolts/AppLinks (= 1.8.4)
     - Bolts/Tasks (= 1.8.4)
@@ -9,19 +9,19 @@ PODS:
   - CHRTextFieldFormatter (1.0.1)
   - Crashlytics (3.8.2):
     - Fabric (~> 1.6.3)
-  - Digits (2.4.0):
-    - TwitterCore (= 2.4.0)
-  - Fabric (1.6.8)
-  - FBSDKCoreKit (4.15.1):
+  - Digits (2.5.0):
+    - TwitterCore (= 2.5.0)
+  - Fabric (1.6.9)
+  - FBSDKCoreKit (4.16.0):
     - Bolts (~> 1.7)
-  - FBSDKLoginKit (4.15.1):
+  - FBSDKLoginKit (4.16.1):
     - FBSDKCoreKit
-  - FBSDKShareKit (4.15.1):
+  - FBSDKShareKit (4.16.1):
     - FBSDKCoreKit
-  - ImagePicker (1.4.0)
+  - ImagePicker (1.4.1)
   - JGProgressHUD (1.4)
   - Kanna (1.1.1)
-  - TwitterCore (2.4.0):
+  - TwitterCore (2.5.0):
     - Fabric
 
 DEPENDENCIES:
@@ -39,19 +39,19 @@ DEPENDENCIES:
   - TwitterCore
 
 SPEC CHECKSUMS:
-  Alamofire: b70a7352335f8ea5babd0a923eb7e8eacc67b877
+  Alamofire: 0dfba1184a543e2aa160f4e39cac4e8aba48d223
   Bolts: 8a7995239dbe724f9cba2248b766d48b7ebdd322
   CHRTextFieldFormatter: 13b6449dbd421d97b6e179e50d817165f9feebec
   Crashlytics: 27acca95a01b042a8294291dd6dff27f8f6af6d7
-  Digits: 8173fa5420d64bf490bade840e6bc36b74537d6c
-  Fabric: 5755268d0171435ab167e3d0878a28a777deaf10
-  FBSDKCoreKit: fc7fa53d16b095ee3fd53f0cd59f1df8bcbb634d
-  FBSDKLoginKit: 073f79b3b2e762fc6f54a283fe15f45372d59f5f
-  FBSDKShareKit: 11cbb5a4d7b5fda8143cc95b76188147e6725736
-  ImagePicker: 6659ccdd4737bfa14ed3b4aa7ffe18b193d92a0c
+  Digits: c69ee2d1a6acf728c5d159f1bd335e4882bd3225
+  Fabric: bc5bec42cef4bcf1ee3ce0e218fc518e4b44dfbb
+  FBSDKCoreKit: 7a6baaed4a2b2a244ba253346713bdbc74df135b
+  FBSDKLoginKit: 469a56cebe2e1ed62b1621d0b155970fd6aac2d8
+  FBSDKShareKit: 53af0239b5bd2ebf191f32f75991245a208cc982
+  ImagePicker: c2b43f5201f34efb3459ac6af39992fdd802c2d4
   JGProgressHUD: 1617b0940cf80bb53e8f7d6f0fd69252ea45d6d4
   Kanna: 9d3118cff609bd21eb374be5be590b544941160f
-  TwitterCore: a139904c80805ad3dde9eef1100704f96f646d1d
+  TwitterCore: 95c46af93112768a7983bd370d66023553601d01
 
 PODFILE CHECKSUM: 24dd58c344c7e6f02e79c9a26e98fd5f5482dd50
 
