@@ -25,6 +25,7 @@ class CreatePasswordViewController: BasicViewController, UITextFieldDelegate{
         
 
         PwdTextField.delegate = self
+        PwdTextField.becomeFirstResponder()
         VerifyPwdTextField.delegate = self
         ConfirmBtn.layer.cornerRadius = 5
         ConfirmBtn.enabled = false

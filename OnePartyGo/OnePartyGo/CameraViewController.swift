@@ -96,7 +96,7 @@ class CameraViewController: UIViewController{
     }
     
     func touchInCamera(touchPoint: UITapGestureRecognizer){
-        var focusPoint = CGPoint(x: touchPoint.locationInView(previewView).y / AppHeight, y: 1.0 - touchPoint.locationInView(previewView).x / AppWidth)
+        let focusPoint = CGPoint(x: touchPoint.locationInView(previewView).y / AppHeight, y: 1.0 - touchPoint.locationInView(previewView).x / AppWidth)
         
         do{
             if let device = captureDevice {
@@ -231,7 +231,7 @@ extension CameraViewController:  AVCaptureVideoDataOutputSampleBufferDelegate{
                             hud.textLabel.text = "QR: " + QRMessage
                             hud.showInView(self.view)
                             
-                            let seconds = 0.5
+                            let seconds = 1.5
                             let delay = seconds * Double(NSEC_PER_SEC)
                             let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
                             dispatch_after(delayTime, dispatch_get_main_queue(), {
@@ -240,7 +240,7 @@ extension CameraViewController:  AVCaptureVideoDataOutputSampleBufferDelegate{
                             })
                         } else{
                             hud.textLabel.text = "QRCode not valid"
-                            hud.dismissAfterDelay(0.5)
+                            hud.dismissAfterDelay(1.5)
                         }
                     }
                     
