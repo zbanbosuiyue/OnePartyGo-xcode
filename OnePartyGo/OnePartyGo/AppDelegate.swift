@@ -45,7 +45,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WXApiDelegate {
         print(localStorage.objectForKey(localStorageKeys.FBAccessToken))
         print(localStorage.objectForKey(localStorageKeys.EmailPwdAccessToken))
 
-        
+        /*
         if let _ = localStorage.objectForKey(localStorageKeys.WeChatAccessToken){
         } else if let _ = localStorage.objectForKey(localStorageKeys.FBAccessToken){
         } else if let _ = localStorage.objectForKey(localStorageKeys.EmailPwdAccessToken){
@@ -53,6 +53,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WXApiDelegate {
         } else{
             nvc = BaseNavigationController(rootViewController: LeadingViewController())
         }
+         */
 
         return nvc
     }

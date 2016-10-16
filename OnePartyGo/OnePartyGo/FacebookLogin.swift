@@ -26,7 +26,6 @@ public func facebookLogin(vc: UIViewController){
             let fb_access_Token = FBSDKAccessToken.currentAccessToken().tokenString
             let graphRequest : FBSDKGraphRequest = FBSDKGraphRequest(graphPath: "me", parameters: ["fields":"email, first_name, last_name, picture.type(large)",])
             
-            
             graphRequest.startWithCompletionHandler({ (connection, result, error) -> Void in
                 
                 if ((error) != nil)
@@ -38,23 +37,22 @@ public func facebookLogin(vc: UIViewController){
                     let fbUnMutableUserInfo = result as! NSDictionary
                     
                     let fbUserInfo = fbUnMutableUserInfo.mutableCopy() as! NSMutableDictionary
-                    
-                    
+                
                     let fb_id = fbUserInfo["id"] as! String
+                    
                     if let email = fbUserInfo["email"]{
                         localStorage.setObject(email, forKey: localStorageKeys.UserEmail)
-                        localStorage.setObject(fbUserInfo["id"], forKey: localStorageKeys.FBId)
+                        localStorage.setObject(fb_id, forKey: localStorageKeys.FBId)
+                        localStorage.setObject(fb_access_Token, forKey: localStorageKeys.FBAccessToken)
                     }
                     if let imageUrl = fbUserInfo["picture"]!["data"]!!["url"]{
                         fbUserInfo.removeObjectForKey("picture")
                         fbUserInfo.setObject(imageUrl!, forKey: "picture")
+                        fbUserInfo.setObject(fb_access_Token, forKey: "fb_access_token")
+                        localStorage.setObject(fbUserInfo, forKey: localStorageKeys.FBUserInfo)
                         localStorage.setObject(imageUrl, forKey: localStorageKeys.UserHeadImageURL)
                         print(imageUrl)
-                        fbUserInfo.setObject(fb_access_Token, forKey: "fb_access_token")
                     }
-                    print(fbUserInfo)
-
-                    localStorage.setObject(fbUserInfo, forKey: localStorageKeys.FBUserInfo)
                     vc.getFBUserInfo(fb_id)
                 }
             })

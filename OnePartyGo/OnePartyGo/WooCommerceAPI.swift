@@ -11,11 +11,6 @@ import Alamofire
 import Kanna
 import JGProgressHUD
 
-
-private let WCConsumerKey = "ck_d9416856e0192556cfb0810cb27df38647adad5b"
-private let WCSecretKey = "cs_3e86cad7fd7260dd449ccd1e706e7f64a72bc15d"
-
-
 extension UIViewController{
     
     public func createAppApiUser(email: String, phone: String, pwd: String){
@@ -57,54 +52,6 @@ extension UIViewController{
                 }
             }
         }
-    }
-    
-    public func createWCCustomer(email: String, phone: String, pwd: String, completion: (Detail: AnyObject, Success: Bool) -> Void){
-        
-        let hud = JGProgressHUD(style: .Light)
-        hud?.textLabel.text = "Creating Customer"
-        hud?.showInView(view)
-        
-        let customerInfo = [
-            "customer" : [
-                "email" : email,
-                "password" : pwd,
-                "billing" : [
-                    "phone" : phone
-                ]
-            ]
-        ]
-        
-        let url = NSURL(string: "\(BaseURL)/wc-api/v3/customers?consumer_key=\(WCConsumerKey)&consumer_secret=\(WCSecretKey)")!
-        
-        let request = NSMutableURLRequest(URL: url)
-        request.HTTPMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.HTTPBody = try! NSJSONSerialization.dataWithJSONObject(customerInfo, options: [])
-        
-        Alamofire.request(request)
-            .responseJSON { response in
-                
-                switch response.result {
-                case .Failure( _):
-                    completion(Detail: "Network Problem", Success: false)
-                    hud.textLabel.text = "Network Problem"
-                    
-                case .Success(let responseObject):
-                    let responseContent = responseObject as! [String : AnyObject]
-                    if let errors = responseContent["errors"] as? [[String : AnyObject]]{
-                        completion(Detail: errors, Success: true)
-                    } else{
-                        completion(Detail: "Created Customer Success", Success: true)
-                    }
-                }
-                
-                hud.dismissAnimated(true)
-                hud.dismissAfterDelay(1.0)
-                
-        }
-        
-        
     }
     
     public func loginToWC(uname: String, pwd: String, completion: (Detail: String, Success: Bool) -> Void){
@@ -173,37 +120,15 @@ extension UIViewController{
         }
     }
     
-    public func getWCCustomerInfo(email: String, completion: (Detail: AnyObject, Success: Bool) -> Void){
-        let hud = JGProgressHUD(style: .Light)
-        hud?.textLabel.text = "Finding Customer"
-        hud?.showInView(view)
-        
-        
-        let url = NSURL(string: "\(BaseURL)/wc-api/v3/customers/email/\(email)?consumer_key=\(WCConsumerKey)&consumer_secret=\(WCSecretKey)")!
-        Alamofire.request(.GET, url).validate()
-            .responseJSON { response in
-                hud.dismiss()
-                
-                switch response.result{
-                case .Failure(let error):
-                    completion(Detail: error, Success: false)
-                    
-                case .Success(let responseObject):
-                    completion(Detail: responseObject, Success: true)
-                }
-        }
-    }
     
     public func getWeChatUserInfo(response_code: String){
         let url = BaseURL + "api/wp-api.php?"
-        
         let hud = JGProgressHUD(style: .Light)
         hud?.textLabel.text = "Retriving info from Wechat"
         hud?.showInView(view, animated: true)
         
         Alamofire.request(.GET, url, parameters: ["wechat_response_code" : response_code]).responseJSON { response in
             hud.dismiss()
-            print(response.request)
             switch response.result{
             case .Failure:
                 print(response.result.error)
@@ -224,11 +149,12 @@ extension UIViewController{
                         /// New WeChat User
                         let wechat_access_token = data["access_token"]
                         let wechat_open_id = data["openid"]
-                        let wechat_headImage_url = data["headimagurl"]
+                        let wechat_headImage_url = data["headimgurl"]
                         
                         localStorage.setObject(wechat_access_token, forKey: localStorageKeys.WeChatAccessToken)
                         localStorage.setObject(wechat_open_id, forKey: localStorageKeys.WeChatOpenId)
                         localStorage.setObject(wechat_headImage_url, forKey: localStorageKeys.UserHeadImageURL)
+                        localStorage.setObject(data, forKey: localStorageKeys.WeChatUserInfo)
                         
                         print("kkk")
                         
@@ -248,13 +174,13 @@ extension UIViewController{
         let url = BaseURL + "api/wp-api.php?"
         
         Alamofire.request(.GET, url, parameters: ["fb_id": fb_id]).responseJSON { response in
-            print(response.request)
             switch response.result{
             case .Failure:
                 print(response.result.error)
             case .Success:
-                print(response.request)
                 let data = response.result.value!
+                print(response.request)
+                print(data)
                 if let fb_access_token = data["fb_access_token"] as? String{
                     localStorage.setObject(fb_access_token, forKey: localStorageKeys.FBAccessToken)
                     self.navigationController?.pushViewController(MainViewController(), animated: true)
@@ -273,9 +199,7 @@ extension UIViewController{
     
     public func getPhoneUserInfo(phone_number: String){
         let url = BaseURL + "api/wp-api.php?"
-        
         Alamofire.request(.GET, url, parameters: ["phone_number": phone_number]).responseJSON { response in
-            print(response.request)
             switch response.result{
             case .Failure:
                 print(response.result.error)
@@ -387,7 +311,6 @@ extension UIViewController{
     public func checkIfInfoExist(info_key: String, info_value: String,  completion: (Detail: String, Exist: Bool) -> Void){
         let url = BaseURL + "api/wp-verify.php?"
         Alamofire.request(.GET, url, parameters: [info_key: info_value]).responseJSON { response in
-            print(response.request)
             switch response.result{
             case .Failure:
                 completion(Detail: "Network Problem", Exist: false)

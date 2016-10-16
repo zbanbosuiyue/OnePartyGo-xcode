@@ -18,12 +18,12 @@ public let AppHeight: CGFloat = UIScreen.mainScreen().bounds.size.height
 public let MainBounds: CGRect = UIScreen.mainScreen().bounds
 public let MainMenuBtnFont = UIFont(name: "Arial", size: 14)
 public let MoreMenuBtnFont = UIFont(name: "Arial", size: 13)
-public var CurrentVersion: Float = 0.9
+public var CurrentVersion: Float = 1.0
 public let reuseIdentifier = "Cell"
 //public let MainMenuBtnArr = ["Scan QR", "Home", "Event Calendar", "My Account", "Checkout", "Cart", "Logout"]
 
 /// Chinese
-public let MainMenuBtnArr = ["扫描 QR Code", "主页", "我的账户", "结账", "购物车", "登出"]
+public let MainMenuBtnArr = ["扫描 QR Code", "登陆/注册", "主页", "我的账户", "结账", "购物车", "登出"]
 
 public let MoreMenuBtnArr = ["分享到微信", "分享到朋友圈", "分享到FB"]
 
@@ -173,11 +173,16 @@ enum MainButtonNameSelector: Int{
     case scanQRBtn = 0, homeBtn, myAccountBtn, checkoutBtn, cartBtn, logotBtn
 }
 
+enum MainButtonWithoutLoginNameSelector: Int{
+    case scanQRBtn = 0, login, homeBtn, checkoutBtn, cartBtn, logotBtn
+}
+
 enum MoreButtonNameSelector: Int{
     case shareToWeChat = 0, shareToMoment, shareToFB
 }
 
 enum URLSelector: String{
+    case login = "login"
     case home = ""
     case eventCalendar = "calendar"
     case myAccount = "my-account"

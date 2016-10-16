@@ -42,7 +42,6 @@ class TableMenuView: UIView, UITableViewDelegate, UITableViewDataSource {
 
     func tableView(tableView:UITableView, numberOfRowsInSection section:Int) -> Int
     {
-        
         return titles.count
     }
     
@@ -60,7 +59,6 @@ class TableMenuView: UIView, UITableViewDelegate, UITableViewDataSource {
         cell.textLabel?.font = font
         cell.textLabel?.textColor = UIColor.blackColor()
         cell.textLabel?.textAlignment = NSTextAlignment.Center
-        
         
         cell.layer.shadowColor = UIColor.grayColor().CGColor
         cell.layer.shadowOffset = CGSize(width: 0.5, height: 0.5)

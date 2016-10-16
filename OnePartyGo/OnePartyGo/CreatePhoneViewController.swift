@@ -29,7 +29,7 @@ class CreatePhoneViewController: BasicViewController {
                             self.navigationController!.pushViewController(LoginEnterPwdViewController(), animated: true)
                         }))
                         alertController.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: {(UIAlertAction) in
-                            self.navigationController!.popViewControllerAnimated(true)
+                            
                         }))
                         
                         dispatch_async(dispatch_get_main_queue(), {

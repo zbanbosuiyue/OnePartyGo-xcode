@@ -104,10 +104,7 @@ class MainBasicViewController: BasicViewController {
         mainMenuView.tag = -1
     }
     
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
-        refreshCache()
-    }
+
     
     func refreshCache(){
         userImageView = UIImageView(frame: CGRect(x: 10, y: 10, width: 80, height: 80))
@@ -119,16 +116,15 @@ class MainBasicViewController: BasicViewController {
             userImageView.image = userHeadImage
         }else{
             if let url = localStorage.objectForKey(localStorageKeys.UserHeadImageURL){
-                print("fuck")
-                
                 userImageView.imageFromServerURL(url as! String, completion: { (Detail, Success) in
                 })
             }
-            let user_email = localStorage.objectForKey(localStorageKeys.UserEmail) as! String
-            let imageUrl = BaseURL + "api/uploads/" + "\(user_email).png"
-            userImageView.imageFromServerURL(imageUrl, completion: { (Detail, Success) in
-            })
- 
+            if let user_email = localStorage.objectForKey(localStorageKeys.UserEmail) as? String {
+                let imageUrl = BaseURL + "api/uploads/" + "\(user_email).png"
+                userImageView.imageFromServerURL(imageUrl, completion: { (Detail, Success) in
+                })
+            }
+
         }
     }
     
@@ -152,7 +148,6 @@ class MainBasicViewController: BasicViewController {
         addBlurEffect()
         
 
-        
         userImageView.layer.borderWidth = 1
         userImageView.layer.masksToBounds = false
         userImageView.layer.borderColor = UIColor.grayColor().CGColor
@@ -168,6 +163,13 @@ class MainBasicViewController: BasicViewController {
         let mainMenuTableView = TableMenuView(frame:CGRect(x: 0, y: userImageView.frame.height + 10, width: AppWidth * 0.382, height: AppHeight * 0.382))
         mainMenuView.addSubview(mainMenuTableView)
         mainMenuTableView.titles = MainMenuBtnArr
+        
+        if checkUserLogin(){
+            mainMenuTableView.titles.removeAtIndex(1)
+        } else{
+            mainMenuTableView.titles.removeAtIndex(3)
+        }
+        
         mainMenuTableView.font = MainMenuBtnFont
         mainMenuTableView.tableView?.rowHeight = 35
         mainMenuTableView.delegate = self
@@ -415,28 +417,45 @@ extension MainBasicViewController: UIScrollViewDelegate, TableMenuDelegate, WKNa
     func tableMenuDidChangedToIndex(menuId: Int, btnIndex: Int) {
         /// Main Menu
         if menuId == 1{
-            let index = MainButtonNameSelector(rawValue: btnIndex)!
-            switch index{
-            case .scanQRBtn:
-                showQRPage()
-            case .homeBtn:
-                gotoURL(URLSelector.home)
-            /*
-            case .eventCalendarBtn:
-                gotoURL(URLSelector.eventCalendar)
- */
-            case .myAccountBtn:
-                gotoURL(URLSelector.myAccount)
-            case .checkoutBtn:
-                gotoURL(URLSelector.checkout)
-            case .cartBtn:
-                gotoURL(URLSelector.cart)
-            case .logotBtn:
-                logoutApp()
+            if checkUserLogin(){
+                print("login")
+                let index = MainButtonNameSelector(rawValue: btnIndex)!
+                switch index{
+                case .scanQRBtn:
+                    showQRPage()
+                case .homeBtn:
+                    gotoURL(URLSelector.home)
+                case .myAccountBtn:
+                    gotoURL(URLSelector.myAccount)
+                case .checkoutBtn:
+                    gotoURL(URLSelector.checkout)
+                case .cartBtn:
+                    gotoURL(URLSelector.cart)
+                case .logotBtn:
+                    logoutApp()
+                }
+            }
+            else{
+                print("not login")
+                let index = MainButtonWithoutLoginNameSelector(rawValue: btnIndex)!
+                switch index{
+                case .scanQRBtn:
+                    showQRPage()
+                case .homeBtn:
+                    gotoURL(URLSelector.home)
+                case .login:
+                    gotoLoginPage()
+                case .checkoutBtn:
+                    gotoURL(URLSelector.checkout)
+                case .cartBtn:
+                    gotoURL(URLSelector.cart)
+                case .logotBtn:
+                    logoutApp()
+                }
             }
         }
-            
-            /// More Menu
+        
+        /// More Menu
         else {
             let index = MoreButtonNameSelector(rawValue: btnIndex)!
             switch index{
@@ -462,7 +481,10 @@ extension MainBasicViewController: UIScrollViewDelegate, TableMenuDelegate, WKNa
         for cookie in storage.cookies! {
             storage.deleteCookie(cookie)
         }
-        self.navigationController?.pushViewController(LeadingViewController(), animated: true)
+        clearSession()
+        clearCache()
+        
+        initViews()
         CurrentURL = nil
     }
     
@@ -480,10 +502,15 @@ extension MainBasicViewController: UIScrollViewDelegate, TableMenuDelegate, WKNa
     func setUserProfile(){
         closeAllMenu()
         
-        self.navigationController?.navigationBar.hidden = true
-        let imagePickerVC = CreateUserHeadImageViewController()
-        imagePickerVC.delegate = self
-        self.navigationController?.pushViewController(imagePickerVC, animated: true)
+        if checkUserLogin(){
+            self.navigationController?.navigationBar.hidden = true
+            let imagePickerVC = CreateUserHeadImageViewController()
+            imagePickerVC.delegate = self
+            self.navigationController?.pushViewController(imagePickerVC, animated: true)
+        }else{
+            showAlertDoNothing("Not login", message: "Please login first")
+        }
+
     }
     
     
@@ -611,6 +638,114 @@ extension MainBasicViewController: UIScrollViewDelegate, TableMenuDelegate, WKNa
         print("cancel")
         self.navigationController?.popViewControllerAnimated(true)
     }
+    
+    func gotoLoginPage(){
+        closeAllMenu()
+        
+        self.navigationController?.pushViewController(LeadingViewController(), animated: true)
+        /*
+        let alertController = UIAlertController(title: "请选择登陆方式", message: nil, preferredStyle: .Alert)
+        alertController.addAction(UIAlertAction(title: "手机", style: .Default, handler: {(UIAlertAction) in
+             self.navigationController?.pushViewController(CreatePhoneViewController(), animated: true)
+        }))
+        alertController.addAction(UIAlertAction(title: "微信", style: .Default, handler: {(UIAlertAction) in
+            weChatLogin(self)
+        }))
+        
+        alertController.addAction(UIAlertAction(title: "Facebook", style: .Default, handler: {(UIAlertAction) in
+            facebookLogin(self)
+        }))
+        
+        alertController.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: {(UIAlertAction) in
+            facebookLogin(self)
+        }))
+        
+        dispatch_async(dispatch_get_main_queue(), {
+            self.presentViewController(alertController, animated: true, completion: nil)
+        })
+         */
+
+    }
+    
+    func initViews(){
+        setNav()
+        setMainMenuView()
+        setMoreMenu()
+        setKKMainWebView()
+        gotoURL(BaseURL)
+        verisonChecker()
+        refreshCache()
+    }
+    
+    func checkAccessToken(){
+        var parameters = [String : AnyObject]()
+        
+        if let wechat_access_token = localStorage.objectForKey(localStorageKeys.WeChatAccessToken), wechat_openid = localStorage.objectForKey(localStorageKeys.WeChatOpenId){
+            parameters["wechat_openid"] = wechat_openid
+            parameters["wechat_access_token"] = wechat_access_token
+        }
+        
+        if let fb_access_token = localStorage.objectForKey(localStorageKeys.FBAccessToken), fb_id = localStorage.objectForKey(localStorageKeys.FBId){
+            parameters["fb_access_token"] = fb_access_token
+            parameters["fb_id"] = fb_id
+        }
+        
+        if let phone_access_token = localStorage.objectForKey(localStorageKeys.PhoneAccessToken), user_phone = localStorage.objectForKey(localStorageKeys.UserPhone){
+            parameters["phone_access_token"] = phone_access_token
+            parameters["user_phone"] = user_phone
+        }
+        
+        if let email_pwd_access_token = localStorage.objectForKey(localStorageKeys.EmailPwdAccessToken), email = localStorage.objectForKey(localStorageKeys.UserEmail){
+            parameters["email"] = email
+            parameters["email_pwd_access_token"] = email_pwd_access_token
+        }
+        
+        print(localStorage.objectForKey(localStorageKeys.UserHeadImageURL))
+        let parametersString = parameters.stringFromHttpParameters()
+        let url = BaseURL + "api/wp-test.php?\(parametersString)"
+        gotoURL(url)
+    }
+    
+    func setupUserImage(){
+        if let user_email = localStorage.objectForKey(localStorageKeys.UserEmail) as? String{
+            let imageUrl = BaseURL + "api/uploads/" + "\(user_email).png"
+            userImageView.imageFromServerURL(imageUrl, completion: { (Detail, Success) in
+                if Success{
+                    print("success")
+                    localStorage.setObject(imageUrl, forKey: localStorageKeys.UserHeadImageURL)
+                } else{
+                    if let imageUrl = localStorage.objectForKey(localStorageKeys.UserHeadImageURL){
+                        print(imageUrl)
+                    } else{
+                        let createImageAlter = UIAlertController(title: "Add Profile", message: "You can add your profile now or later", preferredStyle: .Alert)
+                        let createImageOKAction = UIAlertAction(title: "Setup Now", style: .Default, handler: { (UIAlertAction) in
+                            self.setUserProfile()
+                        })
+                        let createImageCancelAction = UIAlertAction(title: "Later", style: .Cancel, handler:nil)
+                        createImageAlter.addAction(createImageOKAction)
+                        createImageAlter.addAction(createImageCancelAction)
+                        dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                            self.presentViewController(createImageAlter, animated: true, completion: {
+                                
+                            })
+                        })
+                    }
+                }
+            })
+        }
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        if isInit{
+            setupUserImage()
+            isInit = false
+        }
+        refreshCache()
+        checkAccessToken()
+    }
+    
+    
 }
 
 

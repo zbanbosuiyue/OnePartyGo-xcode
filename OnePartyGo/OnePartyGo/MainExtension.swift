@@ -48,7 +48,6 @@ extension UIViewController {
             self.createProfileAlert("Setup Phone", message: email + " Please setup your phone number.")
         } else{
             /// Setup email ///
-            
             dispatch_async(dispatch_get_main_queue())
             {
                 if let name = localStorage.objectForKey(localStorageKeys.UserFirstName) as? String{
@@ -64,10 +63,10 @@ extension UIViewController {
     
     func loginProfileCheck(){
         if let FBUserInfo = localStorage.objectForKey(localStorageKeys.FBUserInfo){
-            if let userHeadImageURL = FBUserInfo["picture"]{
+            if let userHeadImageURL = FBUserInfo["picture"] as? String{
                 localStorage.setObject(userHeadImageURL, forKey: localStorageKeys.UserHeadImageURL)
             }
-            if let email = FBUserInfo[FBUserInfoSelector.email.rawValue]!{
+            if let email = FBUserInfo[FBUserInfoSelector.email.rawValue] as? String{
                 localStorage.setObject(email, forKey: localStorageKeys.UserEmail)
             }
         }
@@ -83,11 +82,7 @@ extension UIViewController {
             createProfileAlert()
         }
     }
-    
 
-    
-
-    
     func showAlertDoNothing(title: String, message: String){
         let title = title
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .Alert)
@@ -192,7 +187,6 @@ extension UIViewController {
                 print(response.result.error)
             case .Success:
                 let data = response.result.value!
-                print(data)
                 if let _ = data["error"] as? String {
                     let isForceUpdate = data["is_force_update"] as! Bool
                     let serverAppVersion = data["server_app_version"] as! Double
@@ -226,6 +220,22 @@ extension UIViewController {
             self.presentViewController(alert, animated: true, completion: nil)
         }
     }
+    
+    func checkUserLogin() -> Bool{
+        if let _ = localStorage.objectForKey(localStorageKeys.WeChatAccessToken){
+            return true
+        }
+        if let _ = localStorage.objectForKey(localStorageKeys.FBAccessToken){
+            return true
+        }
+        if let _ = localStorage.objectForKey(localStorageKeys.EmailPwdAccessToken){
+            return true
+        }
+        if let _ = localStorage.objectForKey(localStorageKeys.PhoneAccessToken){
+            return true
+        }
+        return false
+    }
 }
 
 
@@ -239,11 +249,9 @@ extension UIImageView {
             }
             dispatch_async(dispatch_get_main_queue(), { () -> Void in
                 if let image = UIImage(data: data!){
-                    print("sss")
                     self.image = image
                     completion(Detail: "", Success: true)
                 } else{
-                    print("kk")
                     completion(Detail: "Not Valid URL", Success: false)
                 }
                 self.contentMode = .ScaleAspectFit

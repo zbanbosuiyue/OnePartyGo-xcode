@@ -64,10 +64,10 @@ class LeadingViewController: BasicViewController{
         
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        navigationController?.navigationBar.hidden = true
+        navigationController?.navigationBar.hidden = false
         clearSession()
-        checkLogin()
-        verisonChecker()
+        //checkLogin()
+        //verisonChecker()
     }
     
     
@@ -96,10 +96,6 @@ class LeadingViewController: BasicViewController{
     func sendPostToWC(){
         self.navigationController?.pushViewController(CreateEmailViewController(), animated: true)
     }
-    
-    
-    
-
     
     
     override func didReceiveMemoryWarning() {
