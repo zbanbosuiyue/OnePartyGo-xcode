@@ -18,7 +18,7 @@ public let AppHeight: CGFloat = UIScreen.mainScreen().bounds.size.height
 public let MainBounds: CGRect = UIScreen.mainScreen().bounds
 public let MainMenuBtnFont = UIFont(name: "Arial", size: 14)
 public let MoreMenuBtnFont = UIFont(name: "Arial", size: 13)
-public var CurrentVersion: Float = 1.0
+public var CurrentVersion: Double = 1.0
 public let reuseIdentifier = "Cell"
 //public let MainMenuBtnArr = ["Scan QR", "Home", "Event Calendar", "My Account", "Checkout", "Cart", "Logout"]
 

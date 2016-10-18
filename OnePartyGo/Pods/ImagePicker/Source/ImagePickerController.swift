@@ -309,6 +309,7 @@ public class ImagePickerController: UIViewController {
   private func takePicture() {
     guard isBelowImageLimit() && !isTakingPicture else { return }
     isTakingPicture = true
+    print("isBelow \(isBelowImageLimit())")
     bottomContainer.pickerButton.enabled = false
     bottomContainer.stackView.startLoader()
     let action: Void -> Void = { [unowned self] in
@@ -343,11 +344,13 @@ extension ImagePickerController: BottomContainerViewDelegate {
   }
 
   func cancelButtonDidPress() {
+    print("bbb")
     dismissViewControllerAnimated(true, completion: nil)
     delegate?.cancelButtonDidPress(self)
   }
 
   func imageStackViewDidPress() {
+    print("aaa")
     var images: [UIImage]
     if let preferredImageSize = preferredImageSize {
         images = AssetManager.resolveAssets(stack.assets, size: preferredImageSize)
@@ -366,6 +369,7 @@ extension ImagePickerController: CameraViewDelegate {
   }
 
   func imageToLibrary() {
+    print("ccc")
     guard let collectionSize = galleryView.collectionSize else { return }
 
     galleryView.fetchPhotos() {

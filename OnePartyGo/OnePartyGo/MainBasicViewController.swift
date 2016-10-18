@@ -504,7 +504,8 @@ extension MainBasicViewController: UIScrollViewDelegate, TableMenuDelegate, WKNa
         
         if checkUserLogin(){
             self.navigationController?.navigationBar.hidden = true
-            let imagePickerVC = CreateUserHeadImageViewController()
+            let imagePickerVC = ImagePickerController()
+            imagePickerVC.imageLimit = 1
             imagePickerVC.delegate = self
             self.navigationController?.pushViewController(imagePickerVC, animated: true)
         }else{

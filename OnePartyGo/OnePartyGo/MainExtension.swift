@@ -62,6 +62,7 @@ extension UIViewController {
     
     
     func loginProfileCheck(){
+        print(localStorage.objectForKey(localStorageKeys.UserEmail))
         if let FBUserInfo = localStorage.objectForKey(localStorageKeys.FBUserInfo){
             if let userHeadImageURL = FBUserInfo["picture"] as? String{
                 localStorage.setObject(userHeadImageURL, forKey: localStorageKeys.UserHeadImageURL)
@@ -70,6 +71,8 @@ extension UIViewController {
                 localStorage.setObject(email, forKey: localStorageKeys.UserEmail)
             }
         }
+        
+        print(localStorage.objectForKey(localStorageKeys.UserEmail))
         ///Check if email and phone all setup
         if let email = localStorage.objectForKey(localStorageKeys.UserEmail), let phone = localStorage.objectForKey(localStorageKeys.UserPhone), let pwd = localStorage.objectForKey(localStorageKeys.UserPwd){
             let email = email as! String
@@ -170,6 +173,7 @@ extension UIViewController {
             
             print(differenceDay)
             if differenceDay > 0 {
+                localStorage.setObject(currentDate, forKey: localStorageKeys.LastWarningDate)
                 ifNeedShowAlert = true
             }
         } else{
@@ -191,9 +195,13 @@ extension UIViewController {
                     let isForceUpdate = data["is_force_update"] as! Bool
                     let serverAppVersion = data["server_app_version"] as! Double
                     let updateUrl = data["update_url"] as! String
-                    if ifNeedShowAlert {
-                        self.versionCheckAlert(updateUrl, isForceUpdate: isForceUpdate)
+                    
+                    if CurrentVersion < serverAppVersion {
+                        if ifNeedShowAlert {
+                            self.versionCheckAlert(updateUrl, isForceUpdate: isForceUpdate)
+                        }
                     }
+
                 }
             }
             

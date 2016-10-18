@@ -21,7 +21,6 @@
 		6351A84C1D622CE1009AD9A0 /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 6351A84B1D622CE1009AD9A0 /* libsqlite3.0.tbd */; };
 		6351A84F1D62320F009AD9A0 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6351A84E1D62320F009AD9A0 /* CoreTelephony.framework */; };
 		6351A8561D627D77009AD9A0 /* MainNavViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6351A8551D627D77009AD9A0 /* MainNavViewController.swift */; };
-		636C95481D959CE80016E3E4 /* CreateUserHeadImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 636C95471D959CE80016E3E4 /* CreateUserHeadImageViewController.swift */; };
 		637DE70D1D668E720087F127 /* FaceDetectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637DE70C1D668E720087F127 /* FaceDetectViewController.swift */; };
 		637DE7121D676D050087F127 /* TableMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637DE7111D676D050087F127 /* TableMenuView.swift */; };
 		637DE7141D67AB5D0087F127 /* FacebookLogin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 637DE7131D67AB5D0087F127 /* FacebookLogin.swift */; };
@@ -80,7 +79,6 @@
 		6351A84B1D622CE1009AD9A0 /* libsqlite3.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.0.tbd; path = usr/lib/libsqlite3.0.tbd; sourceTree = SDKROOT; };
 		6351A84E1D62320F009AD9A0 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
 		6351A8551D627D77009AD9A0 /* MainNavViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainNavViewController.swift; sourceTree = "<group>"; };
-		636C95471D959CE80016E3E4 /* CreateUserHeadImageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateUserHeadImageViewController.swift; sourceTree = "<group>"; };
 		637DE70C1D668E720087F127 /* FaceDetectViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FaceDetectViewController.swift; sourceTree = "<group>"; };
 		637DE7111D676D050087F127 /* TableMenuView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableMenuView.swift; sourceTree = "<group>"; };
 		637DE7131D67AB5D0087F127 /* FacebookLogin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FacebookLogin.swift; sourceTree = "<group>"; };
@@ -232,7 +230,6 @@
 			isa = PBXGroup;
 			children = (
 				637DE70C1D668E720087F127 /* FaceDetectViewController.swift */,
-				636C95471D959CE80016E3E4 /* CreateUserHeadImageViewController.swift */,
 				637DE71A1D67FDA80087F127 /* CameraViewController.swift */,
 			);
 			name = Camera;
@@ -382,6 +379,9 @@
 								enabled = 1;
 							};
 							com.apple.Keychain = {
+								enabled = 1;
+							};
+							com.apple.Push = {
 								enabled = 1;
 							};
 						};
@@ -611,7 +611,6 @@
 				630335FF1D6221F50051FAB8 /* MainBasicViewController.swift in Sources */,
 				6351A8561D627D77009AD9A0 /* MainNavViewController.swift in Sources */,
 				630336011D6221F50051FAB8 /* CreatePhoneViewController.swift in Sources */,
-				636C95481D959CE80016E3E4 /* CreateUserHeadImageViewController.swift in Sources */,
 				6303360A1D6222040051FAB8 /* MainExtension.swift in Sources */,
 				637DE70D1D668E720087F127 /* FaceDetectViewController.swift in Sources */,
 				63C695F91D5EA8DF0049AE3E /* AppDelegate.swift in Sources */,
