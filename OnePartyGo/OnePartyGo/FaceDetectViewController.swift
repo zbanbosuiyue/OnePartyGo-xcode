@@ -22,15 +22,15 @@ class FaceDetectViewController: UIViewController {
     func detectImage(){
         let url = "http://imgcache.mysodao.com/img3/M05/DA/F1/CgAPD1LSD4XUmBetAARxBVbAQ88364_900x0x1.JPG"
         
-        imageView.frame = CGRectMake(0, 0, AppWidth, AppHeight)
-        imageView.contentMode = .ScaleAspectFit
+        imageView.frame = CGRect(x: 0, y: 0, width: AppWidth, height: AppHeight)
+        imageView.contentMode = .scaleAspectFit
         
-        NSURLSession.sharedSession().dataTaskWithURL(NSURL(string: url)!, completionHandler: { (data, response, error) -> Void in
+        URLSession.shared.dataTask(with: URL(string: url)!, completionHandler: { (data, response, error) -> Void in
             if error != nil {
                 print(error)
                 return
             }
-            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+            DispatchQueue.main.async(execute: { () -> Void in
                 let image = UIImage(data: data!)
                 
                 self.imageView.image = self.detectFace(image!)
@@ -40,26 +40,26 @@ class FaceDetectViewController: UIViewController {
     }
     
     
-    func imageWithImage(sourceImage: UIImage, scaledToWidth i_width: CGFloat) -> UIImage {
+    func imageWithImage(_ sourceImage: UIImage, scaledToWidth i_width: CGFloat) -> UIImage {
         let oldWidth = sourceImage.size.width
         let scaleFactor = i_width / oldWidth
         let newHeight  = sourceImage.size.height * scaleFactor
         let newWidth = oldWidth * scaleFactor
-        UIGraphicsBeginImageContext(CGSizeMake(newWidth, newHeight))
-        sourceImage.drawInRect(CGRectMake(0, 0, newWidth, newHeight))
+        UIGraphicsBeginImageContext(CGSize(width: newWidth, height: newHeight))
+        sourceImage.draw(in: CGRect(x: 0, y: 0, width: newWidth, height: newHeight))
         let newImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         return newImage!
     }
             
-    func textToImage(drawText: NSString, inImage: UIImage, atPoint: CGPoint) -> UIImage{
+    func textToImage(_ drawText: NSString, inImage: UIImage, atPoint: CGPoint) -> UIImage{
         
         // Setup the font specific variables
-        let textColor = UIColor.whiteColor()
+        let textColor = UIColor.white
         let textFont = UIFont(name: "Helvetica Bold", size: 12)!
         
         // Setup the image context using the passed image
-        let scale = UIScreen.mainScreen().scale
+        let scale = UIScreen.main.scale
         print(scale)
         UIGraphicsBeginImageContextWithOptions(inImage.size, false, scale)
         
@@ -70,13 +70,13 @@ class FaceDetectViewController: UIViewController {
         ]
         
         // Put the image into a rectangle as large as the original image
-        inImage.drawInRect(CGRectMake(0, 0, inImage.size.width, inImage.size.height))
+        inImage.draw(in: CGRect(x: 0, y: 0, width: inImage.size.width, height: inImage.size.height))
         
         // Create a point within the space that is as bit as the image
-        let rect = CGRectMake(atPoint.x, atPoint.y, inImage.size.width, inImage.size.height)
+        let rect = CGRect(x: atPoint.x, y: atPoint.y, width: inImage.size.width, height: inImage.size.height)
         
         // Draw the text into an image
-        drawText.drawInRect(rect, withAttributes: textFontAttributes)
+        drawText.draw(in: rect, withAttributes: textFontAttributes)
         
         // Create a new image out of the images we have created
         let newImage = UIGraphicsGetImageFromCurrentImageContext()
@@ -90,22 +90,22 @@ class FaceDetectViewController: UIViewController {
     }
     
     
-    func detectFace(image: UIImage) -> UIImage{
-        let scale = UIScreen.mainScreen().scale
+    func detectFace(_ image: UIImage) -> UIImage{
+        let scale = UIScreen.main.scale
         UIGraphicsBeginImageContextWithOptions(image.size, false, scale)
         let context = UIGraphicsGetCurrentContext()
         let ciimg = CIImage(image: image)
-        CGContextDrawImage(context!, CGRectMake(0, 0, image.size.width, image.size.height), image.CGImage!)
+        context!.draw(image.cgImage!, in: CGRect(x: 0, y: 0, width: image.size.width, height: image.size.height))
         
         
         let cid = CIDetector(ofType:CIDetectorTypeFace, context:nil, options:[CIDetectorAccuracy: CIDetectorAccuracyHigh])
-        let results = cid!.featuresInImage(ciimg!, options: NSDictionary() as? [String : AnyObject])
+        let results = cid!.features(in: ciimg!, options: NSDictionary() as? [String : AnyObject])
         
         for r in results {
             let face = r as! CIFaceFeature
             NSLog("Face found at (%f,%f) of dimensions %fx%f", face.bounds.origin.x, face.bounds.origin.y, face.bounds.width, face.bounds.height)
-            CGContextSetStrokeColorWithColor(context!, UIColor.purpleColor().CGColor)
-            CGContextStrokeRectWithWidth(context!, face.bounds, 2.0)
+            context!.setStrokeColor(UIColor.purple.cgColor)
+            context!.stroke(face.bounds, width: 2.0)
         }
         
         let newImage = UIGraphicsGetImageFromCurrentImageContext()

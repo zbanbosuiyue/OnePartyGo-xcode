@@ -16,24 +16,26 @@ class MainViewController: MainBasicViewController{
         super.viewDidLoad()
         initViews()
         refreshCache()
+        print("viewDidLoad")
+        print(restorationIdentifier)
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         if QRMessage != nil{
             gotoURL(QRMessage)
         }
-        self.navigationController?.navigationBar.hidden = false
+        self.navigationController?.navigationBar.isHidden = false
     }
     
     func getCookiesAndRedirect(){
         if LoginHTMLString != nil {
             //mainWebView.loadHTMLString(NetworkErrorMsg, BaseURL: NSURL(string: BaseURL))
             
-            let url = NSURL(string: BaseURL)!
-            let request = NSMutableURLRequest(URL: url)
-            request.addValue(cookieString, forHTTPHeaderField: "Cookie")
-            mainWebView.loadRequest(request)
+            let url = URL(string: BaseURL)!
+            let request = NSMutableURLRequest(url: url)
+            //request.addValue(cookieString, forHTTPHeaderField: "Cookie")
+            mainWebView.load(request as URLRequest)
             //mainWebView.loadHTMLString(LoginHTMLString, baseURL: url)
             
         } else{

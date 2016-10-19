@@ -28,29 +28,28 @@ extension UIColor {
 }
 
 
-
 extension UIViewController {
-    func finishLogin(actionTarget: UIAlertAction){
+    func finishLogin(_ actionTarget: UIAlertAction){
         self.navigationController?.pushViewController(MainViewController(), animated: true)
     }
 
     func createProfileAlert(){
-        if let email = localStorage.objectForKey(localStorageKeys.UserEmail), let _ = localStorage.objectForKey(localStorageKeys.UserPhone), let _ = localStorage.objectForKey(localStorageKeys.UserPwd){
+        if let email = localStorage.object(forKey: localStorageKeys.UserEmail), let _ = localStorage.object(forKey: localStorageKeys.UserPhone), let _ = localStorage.object(forKey: localStorageKeys.UserPwd){
             
             /// Check All Profile  ////
             finishLoginAlert("Success", message: email as! String + " login.")
-        } else if let _ = localStorage.objectForKey(localStorageKeys.UserEmail), let _ = localStorage.objectForKey(localStorageKeys.UserPhone){
+        } else if let _ = localStorage.object(forKey: localStorageKeys.UserEmail), let _ = localStorage.object(forKey: localStorageKeys.UserPhone){
             
             /// Email and phone ready, no passsword ////
             createProfileAlert("Setup Password", message: "Please enter your password")
-        } else if let email = localStorage.objectForKey(localStorageKeys.UserEmail) as? String{
+        } else if let email = localStorage.object(forKey: localStorageKeys.UserEmail) as? String{
             /// Email ready, setup phone ///
             self.createProfileAlert("Setup Phone", message: email + " Please setup your phone number.")
         } else{
             /// Setup email ///
-            dispatch_async(dispatch_get_main_queue())
+            DispatchQueue.main.async
             {
-                if let name = localStorage.objectForKey(localStorageKeys.UserFirstName) as? String{
+                if let name = localStorage.object(forKey: localStorageKeys.UserFirstName) as? String{
                     self.createProfileAlert("New Customer", message: name + " please setup your email as login name")
                 }else{
                     self.createProfileAlert("New Customer", message: "Please setup your email as login name")
@@ -62,19 +61,19 @@ extension UIViewController {
     
     
     func loginProfileCheck(){
-        print(localStorage.objectForKey(localStorageKeys.UserEmail))
-        if let FBUserInfo = localStorage.objectForKey(localStorageKeys.FBUserInfo){
+        print(localStorage.object(forKey: localStorageKeys.UserEmail))
+        if let FBUserInfo = localStorage.object(forKey: localStorageKeys.FBUserInfo) as? [String: AnyObject]{
             if let userHeadImageURL = FBUserInfo["picture"] as? String{
-                localStorage.setObject(userHeadImageURL, forKey: localStorageKeys.UserHeadImageURL)
+                localStorage.set(userHeadImageURL, forKey: localStorageKeys.UserHeadImageURL)
             }
             if let email = FBUserInfo[FBUserInfoSelector.email.rawValue] as? String{
-                localStorage.setObject(email, forKey: localStorageKeys.UserEmail)
+                localStorage.set(email, forKey: localStorageKeys.UserEmail)
             }
         }
         
-        print(localStorage.objectForKey(localStorageKeys.UserEmail))
+        print(localStorage.object(forKey: localStorageKeys.UserEmail))
         ///Check if email and phone all setup
-        if let email = localStorage.objectForKey(localStorageKeys.UserEmail), let phone = localStorage.objectForKey(localStorageKeys.UserPhone), let pwd = localStorage.objectForKey(localStorageKeys.UserPwd){
+        if let email = localStorage.object(forKey: localStorageKeys.UserEmail), let phone = localStorage.object(forKey: localStorageKeys.UserPhone), let pwd = localStorage.object(forKey: localStorageKeys.UserPwd){
             let email = email as! String
             let phone = phone as! String
             let pwd = pwd as! String
@@ -86,32 +85,32 @@ extension UIViewController {
         }
     }
 
-    func showAlertDoNothing(title: String, message: String){
+    func showAlertDoNothing(_ title: String, message: String){
         let title = title
-        let alertController = UIAlertController(title: title, message: message, preferredStyle: .Alert)
-        alertController.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
         
-        dispatch_async(dispatch_get_main_queue(), {
-            self.presentViewController(alertController, animated: true, completion: nil)
+        DispatchQueue.main.async(execute: {
+            self.present(alertController, animated: true, completion: nil)
         })
     }
     
-    func finishLoginAlert(title: String, message: String){
+    func finishLoginAlert(_ title: String, message: String){
         let title = title
-        let alertController = UIAlertController(title: title, message: message, preferredStyle: .Alert)
-        alertController.addAction(UIAlertAction(title: "OK", style: .Default, handler: self.finishLogin))
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: self.finishLogin))
         
-        dispatch_async(dispatch_get_main_queue(), {
-            self.presentViewController(alertController, animated: true, completion: nil)
+        DispatchQueue.main.async(execute: {
+            self.present(alertController, animated: true, completion: nil)
         })
     }
     
     
-    func createProfileAlert(title: String, message: String){
-        let alertController = UIAlertController(title: title, message: message, preferredStyle: .Alert)
+    func createProfileAlert(_ title: String, message: String){
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
 
         if let nvc = self.navigationController{
-            alertController.addAction(UIAlertAction(title: "OK", style: .Default, handler: {(UIAlertAction) in
+            alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: {(UIAlertAction) in
                 switch title{
                 case "New Customer":
                     nvc.pushViewController(CreateEmailViewController(), animated: true)
@@ -126,7 +125,7 @@ extension UIViewController {
             }))
         } else{
             let nvc = self.childViewControllers.first?.navigationController
-            alertController.addAction(UIAlertAction(title: "OK", style: .Default, handler: {(UIAlertAction) in
+            alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: {(UIAlertAction) in
                 switch title{
                 case "New Customer":
                     nvc!.pushViewController(CreateEmailViewController(), animated: true)
@@ -140,106 +139,102 @@ extension UIViewController {
                 
             }))
         }
-        dispatch_async(dispatch_get_main_queue(), {
-            self.presentViewController(alertController, animated: true, completion: nil)
+        DispatchQueue.main.async(execute: {
+            self.present(alertController, animated: true, completion: nil)
         })
     }
     
-    func enterPwdAlert(title: String, message: String){
+    func enterPwdAlert(_ title: String, message: String){
         let title = title
-        let alertController = UIAlertController(title: title, message: message, preferredStyle: .Alert)
-        alertController.addAction(UIAlertAction(title: "OK", style: .Default, handler: {(UIAlertAction) in
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: {(UIAlertAction) in
             self.navigationController!.pushViewController(LoginEnterPwdViewController(), animated: true)
         }))
         
-        dispatch_async(dispatch_get_main_queue(), {
-            self.presentViewController(alertController, animated: true, completion: nil)
+        DispatchQueue.main.async(execute: {
+            self.present(alertController, animated: true, completion: nil)
         })
     }
     
     func verisonChecker(){
         var ifNeedShowAlert = false
         
-        let currentDate = NSDate()
-        let calendar = NSCalendar.currentCalendar()
+        let currentDate = Date()
+        let calendar = Calendar.current
         
-        print(localStorage.objectForKey(localStorageKeys.LastWarningDate))
+        print(localStorage.object(forKey: localStorageKeys.LastWarningDate))
         
-        if let lastWarningDate = localStorage.objectForKey(localStorageKeys.LastWarningDate){
-            let flags = NSCalendarUnit.Day
-            let components = calendar.components(flags, fromDate: lastWarningDate as! NSDate, toDate: currentDate, options: [])
+        if let lastWarningDate = localStorage.object(forKey: localStorageKeys.LastWarningDate){
+            let flags = NSCalendar.Unit.day
+            let components = (calendar as NSCalendar).components(flags, from: lastWarningDate as! Date, to: currentDate, options: [])
             
             let differenceDay = components.day
             
             print(differenceDay)
-            if differenceDay > 0 {
-                localStorage.setObject(currentDate, forKey: localStorageKeys.LastWarningDate)
+            if differenceDay! > 0 {
+                localStorage.set(currentDate, forKey: localStorageKeys.LastWarningDate)
                 ifNeedShowAlert = true
             }
         } else{
-            localStorage.setObject(currentDate, forKey: localStorageKeys.LastWarningDate)
+            localStorage.set(currentDate, forKey: localStorageKeys.LastWarningDate)
             ifNeedShowAlert = true
         }
         
         
         let url = BaseURL + "api/update.php"
         let parameter = ["app_version" : CurrentVersion]
-        
-        Alamofire.request(.GET, url, parameters: parameter).responseJSON { response in
-            switch response.result{
-            case .Failure:
-                print(response.result.error)
-            case .Success:
-                let data = response.result.value!
-                if let _ = data["error"] as? String {
-                    let isForceUpdate = data["is_force_update"] as! Bool
-                    let serverAppVersion = data["server_app_version"] as! Double
-                    let updateUrl = data["update_url"] as! String
-                    
-                    if CurrentVersion < serverAppVersion {
-                        if ifNeedShowAlert {
-                            self.versionCheckAlert(updateUrl, isForceUpdate: isForceUpdate)
+        Alamofire.request(url, method: .get, parameters: parameter)
+            .responseJSON { response in
+                if let data = response.result.value as? [String: Any]{
+                    if let _ = data["error"] as? String {
+                        let isForceUpdate = data["is_force_update"] as! Bool
+                        let serverAppVersion = data["server_app_version"] as! Double
+                        let updateUrl = data["update_url"] as! String
+                        
+                        if CurrentVersion < serverAppVersion {
+                            if ifNeedShowAlert {
+                                self.versionCheckAlert(updateUrl, isForceUpdate: isForceUpdate)
+                            }
                         }
+                        
                     }
-
                 }
-            }
-            
         }
+        
     }
     
     // Alert
-    func versionCheckAlert(url: String, isForceUpdate: Bool){
-        let alert = UIAlertController(title: "New Version Available", message: "", preferredStyle: UIAlertControllerStyle.Alert)
+    func versionCheckAlert(_ url: String, isForceUpdate: Bool){
+        let alert = UIAlertController(title: "New Version Available", message: "", preferredStyle: UIAlertControllerStyle.alert)
         
-        let updateAction = UIAlertAction(title: "Update", style: UIAlertActionStyle.Default, handler: { action in
-            UIApplication.sharedApplication().openURL(NSURL(string : url)!)
+        let updateAction = UIAlertAction(title: "Update", style: UIAlertActionStyle.default, handler: { action in
+            UIApplication.shared.openURL(URL(string : url)!)
         })
         
         alert.addAction(updateAction)
         
         if !isForceUpdate{
-            let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: nil)
+            let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler: nil)
             alert.addAction(cancelAction)
         }
         
-        dispatch_async(dispatch_get_main_queue())
+        DispatchQueue.main.async
         {
-            self.presentViewController(alert, animated: true, completion: nil)
+            self.present(alert, animated: true, completion: nil)
         }
     }
     
     func checkUserLogin() -> Bool{
-        if let _ = localStorage.objectForKey(localStorageKeys.WeChatAccessToken){
+        if let _ = localStorage.object(forKey: localStorageKeys.WeChatAccessToken){
             return true
         }
-        if let _ = localStorage.objectForKey(localStorageKeys.FBAccessToken){
+        if let _ = localStorage.object(forKey: localStorageKeys.FBAccessToken){
             return true
         }
-        if let _ = localStorage.objectForKey(localStorageKeys.EmailPwdAccessToken){
+        if let _ = localStorage.object(forKey: localStorageKeys.EmailPwdAccessToken){
             return true
         }
-        if let _ = localStorage.objectForKey(localStorageKeys.PhoneAccessToken){
+        if let _ = localStorage.object(forKey: localStorageKeys.PhoneAccessToken){
             return true
         }
         return false
@@ -249,20 +244,20 @@ extension UIViewController {
 
 
 extension UIImageView {
-    public func imageFromServerURL(urlString: String, completion: (Detail: AnyObject, Success: Bool) -> Void) {
-        NSURLSession.sharedSession().dataTaskWithURL(NSURL(string: urlString)!, completionHandler: { (data, response, error) -> Void in
+    public func imageFromServerURL(_ urlString: String, completion: @escaping (_ Detail: AnyObject, _ Success: Bool) -> Void) {
+        URLSession.shared.dataTask(with: URL(string: urlString)!, completionHandler: { (data, response, error) -> Void in
             if error != nil {
-                completion(Detail: "Not Valid URL", Success: false)
+                completion("Not Valid URL" as AnyObject, false)
                 return
             }
-            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+            DispatchQueue.main.async(execute: { () -> Void in
                 if let image = UIImage(data: data!){
                     self.image = image
-                    completion(Detail: "", Success: true)
+                    completion("" as AnyObject, true)
                 } else{
-                    completion(Detail: "Not Valid URL", Success: false)
+                    completion("Not Valid URL" as AnyObject, false)
                 }
-                self.contentMode = .ScaleAspectFit
+                self.contentMode = .scaleAspectFit
             })
         }).resume()
     }
@@ -276,13 +271,13 @@ extension String {
 }
 
 extension UIImage {
-    func resizeWith(width: CGFloat) -> UIImage? {
+    func resizeWith(_ width: CGFloat) -> UIImage? {
         let imageView = UIImageView(frame: CGRect(origin: .zero, size: CGSize(width: width, height: CGFloat(ceil(width/size.width * size.height)))))
-        imageView.contentMode = .ScaleAspectFit
+        imageView.contentMode = .scaleAspectFit
         imageView.image = self
         UIGraphicsBeginImageContextWithOptions(imageView.bounds.size, false, scale)
         guard let context = UIGraphicsGetCurrentContext() else { return nil }
-        imageView.layer.renderInContext(context)
+        imageView.layer.render(in: context)
         guard let result = UIGraphicsGetImageFromCurrentImageContext() else { return nil }
         UIGraphicsEndImageContext()
         return result
@@ -290,7 +285,7 @@ extension UIImage {
 }
 
 extension Dictionary {
-    mutating func merge<K, V>(dict: [K: V]){
+    mutating func merge<K, V>(_ dict: [K: V]){
         for (k, v) in dict {
             self.updateValue(v as! Value, forKey: k as! Key)
         }
@@ -308,9 +303,9 @@ extension String {
     /// :returns: Returns percent-escaped string.
     
     func stringByAddingPercentEncodingForURLQueryValue() -> String? {
-        let allowedCharacters = NSCharacterSet(charactersInString: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._~")
+        let allowedCharacters = CharacterSet(charactersIn: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._~")
         
-        return self.stringByAddingPercentEncodingWithAllowedCharacters(allowedCharacters)
+        return self.addingPercentEncoding(withAllowedCharacters: allowedCharacters)
     }
     
 }
@@ -332,42 +327,42 @@ extension Dictionary {
             return "\(percentEscapedKey)=\(percentEscapedValue)"
         }
         
-        return parameterArray.joinWithSeparator("&")
+        return parameterArray.joined(separator: "&")
     }
     
 }
 
-extension NSDate
+extension Date
 {
     func hour() -> Int
     {
         //Get Hour
-        let calendar = NSCalendar.currentCalendar()
-        let components = calendar.components(.Hour, fromDate: self)
+        let calendar = Calendar.current
+        let components = (calendar as NSCalendar).components(.hour, from: self)
         let hour = components.hour
         
         //Return Hour
-        return hour
+        return hour!
     }
     
     
     func minute() -> Int
     {
         //Get Minute
-        let calendar = NSCalendar.currentCalendar()
-        let components = calendar.components(.Minute, fromDate: self)
+        let calendar = Calendar.current
+        let components = (calendar as NSCalendar).components(.minute, from: self)
         let minute = components.minute
         
         //Return Minute
-        return minute
+        return minute!
     }
     
     func toShortTimeString() -> String
     {
         //Get Short Time String
-        let formatter = NSDateFormatter()
-        formatter.timeStyle = .ShortStyle
-        let timeString = formatter.stringFromDate(self)
+        let formatter = DateFormatter()
+        formatter.timeStyle = .short
+        let timeString = formatter.string(from: self)
         
         //Return Short Time String
         return timeString

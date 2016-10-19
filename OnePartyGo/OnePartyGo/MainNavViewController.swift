@@ -13,7 +13,7 @@ class MainNavViewController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupAllChildViewController()
-        tabBar.hidden = true
+        tabBar.isHidden = true
         // Do any additional setup after loading the view.
     }
     

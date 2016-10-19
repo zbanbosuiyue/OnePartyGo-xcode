@@ -8,14 +8,24 @@
 
 import Foundation
 
-public func weChatLogin(vc: UIViewController){
+public func weChatLogin(_ vc: UIViewController){
     if WXApi.isWXAppInstalled(){
         print("wechat login")
         let req = SendAuthReq()
         req.scope = "snsapi_userinfo"
         req.state = "123"
-        WXApi.sendReq(req)
+        WXApi.send(req)
     } else{
         vc.showAlertDoNothing("WeChat Not Found", message: "Wechat not installed. Please use Phone or Facebook to login. ")
+    }
+}
+
+public func checkWeChatInstall(_ vc: UIViewController) -> Bool{
+    if WXApi.isWXAppInstalled(){
+        print("wechat Installed")
+        return true
+    } else{
+        print("wechat Not Installed")
+        return false
     }
 }

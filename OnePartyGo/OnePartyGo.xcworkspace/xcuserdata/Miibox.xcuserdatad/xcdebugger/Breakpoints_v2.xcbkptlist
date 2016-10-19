@@ -9,13 +9,29 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "OnePartyGo/WooCommerceAPI.swift"
-            timestampString = "498283389.174323"
+            filePath = "OnePartyGo/FacebookLogin.swift"
+            timestampString = "498529844.931023"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "143"
-            endingLineNumber = "143"
-            landmarkName = "getWeChatUserInfo(response_code:)"
+            startingLineNumber = "40"
+            endingLineNumber = "40"
+            landmarkName = "facebookLogin(_:)"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "OnePartyGo/CreatePhoneViewController.swift"
+            timestampString = "498506887.574622"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "53"
+            endingLineNumber = "53"
+            landmarkName = "viewDidLoad()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -25,13 +41,13 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "OnePartyGo/WooCommerceAPI.swift"
-            timestampString = "498283389.174323"
+            filePath = "OnePartyGo/MainBasicViewController.swift"
+            timestampString = "498599317.995147"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "142"
-            endingLineNumber = "142"
-            landmarkName = "getWeChatUserInfo(response_code:)"
+            startingLineNumber = "625"
+            endingLineNumber = "625"
+            landmarkName = "doneButtonDidPress(_:images:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

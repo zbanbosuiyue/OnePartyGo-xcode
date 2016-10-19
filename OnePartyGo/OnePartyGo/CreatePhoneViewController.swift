@@ -15,42 +15,44 @@ class CreatePhoneViewController: BasicViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let authButton = DGTAuthenticateButton(authenticationCompletion: { (session: DGTSession?, error: NSError?) in
-            if (session != nil) {
-                let phone = session?.phoneNumber
+        let authButton = DGTAuthenticateButton { (DGTSession, Error) in
+            if (DGTSession != nil) {
+                let phone = DGTSession?.phoneNumber
                 localStorage.setValue(phone, forKey: localStorageKeys.UserPhone)
                 
                 self.checkIfInfoExist("user_phone", info_value: phone!, completion: { (Detail, Exist) in
                     if Exist{
                         let email = Detail
                         
-                        let alertController = UIAlertController(title: "Phone already used by other account", message: "Do you want to login through this email: \(email)?", preferredStyle: .Alert)
-                        alertController.addAction(UIAlertAction(title: "OK", style: .Default, handler: {(UIAlertAction) in
+                        let alertController = UIAlertController(title: "Phone already used by other account", message: "Do you want to login through this email: \(email)?", preferredStyle: .alert)
+                        alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: {(UIAlertAction) in
                             self.navigationController!.pushViewController(LoginEnterPwdViewController(), animated: true)
                         }))
-                        alertController.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: {(UIAlertAction) in
+                        alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: {(UIAlertAction) in
                             
                         }))
                         
-                        dispatch_async(dispatch_get_main_queue(), {
-                            self.presentViewController(alertController, animated: true, completion: nil)
+                        DispatchQueue.main.async(execute: {
+                            self.present(alertController, animated: true, completion: nil)
                         })
- 
+                        
                     } else{
                         self.createProfileAlert()
-                    }                    
+                    }
                 })
                 
                 
             } else {
-                NSLog("Authentication error: %@", error!.localizedDescription)
+                NSLog("Authentication error: %@", Error!.localizedDescription)
             }
-        })
+
+        }
+    
         //authButton.digitsAppearance = self.makeTheme()
-        authButton.center = self.view.center
-        self.view.addSubview(authButton)
+        authButton?.center = self.view.center
+        self.view.addSubview(authButton!)
         
-        navigationController?.navigationBar.hidden = false
+        navigationController?.navigationBar.isHidden = false
         
         // Do any additional setup after loading the view.
     }

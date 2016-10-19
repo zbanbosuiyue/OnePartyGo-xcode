@@ -17,11 +17,11 @@ class LoginEnterPwdViewController: BasicViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        navigationController?.navigationBar.hidden = false
+        navigationController?.navigationBar.isHidden = false
         
         LoginPwdTextField.delegate = self
         LoginPwdTextField.becomeFirstResponder()
-        LoginPwdTextField.secureTextEntry = true
+        LoginPwdTextField.isSecureTextEntry = true
         
         
         LoginBtn.layer.cornerRadius = 5
@@ -36,9 +36,10 @@ class LoginEnterPwdViewController: BasicViewController, UITextFieldDelegate {
         // Do any additional setup after loading the view.
     }
     
-    @IBAction func ClickLoginBtn(sender: AnyObject) {
+    @IBAction func ClickLoginBtn(_ sender: AnyObject) {
         let pwd = LoginPwdTextField.text!
-        if let email = localStorage.objectForKey(localStorageKeys.UserEmail){
+        
+        if let email = localStorage.object(forKey: localStorageKeys.UserEmail){
             WPEmailPwdLogin(email as! String, pwd: pwd)
         }else{
             self.createProfileAlert()
@@ -56,7 +57,7 @@ class LoginEnterPwdViewController: BasicViewController, UITextFieldDelegate {
     
     
     
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         ClickLoginBtn(LoginBtn)
         
         return true

@@ -19,52 +19,67 @@ class LeadingViewController: BasicViewController{
     var numberTextField: UITextField!
     var actionSheet: UIAlertController!
     var startBtn: UIButton!
+    var isWechatInstall = false
 
     
     override func viewDidLoad() {
         super.viewDidLoad()
         definesPresentationContext = true
         
-        let backgroundImageView = UIImageView(frame: CGRectMake(AppWidth * 0.2, AppHeight * 0.2, AppWidth * 0.6, AppHeight * 0.5))
+        let backgroundImageView = UIImageView(frame: CGRect(x: AppWidth * 0.2, y: AppHeight * 0.2, width: AppWidth * 0.6, height: AppHeight * 0.5))
         backgroundImageView.image = UIImage(named: "BigLogo")
-        backgroundImageView.contentMode = .ScaleAspectFit
+        backgroundImageView.contentMode = .scaleAspectFit
         
         view.addSubview(backgroundImageView)
-
-        let iconPadding: CGFloat = 50.0
-        let iconWidth: CGFloat = (AppWidth - iconPadding * 2) / 4.5
-
         
-        let iconGap: CGFloat = (AppWidth - 2 * iconPadding - 3 * iconWidth) / 2
+        var iconNum: CGFloat = 2.0
+        
+        if checkWeChatInstall(self){
+            isWechatInstall = true
+            iconNum = 3.0
+        }
+        print(iconNum)
+        
+        
+
+        let iconPadding: CGFloat = AppWidth/(iconNum * 2)
+        let iconWidth: CGFloat = (AppWidth - iconPadding * 2) / (5/3 * iconNum - 2/3)
+        let iconGap = iconWidth * 2/3
+
         
         let startingHeight = backgroundImageView.frame.height + AppHeight * 0.25
         
         let phoneLoginBtn = UIButton(frame: CGRect(x: iconPadding, y: startingHeight, width: iconWidth, height: iconWidth))
-        phoneLoginBtn.setImage(UIImage(named: "Iphone01"), forState: .Normal)
-        phoneLoginBtn.contentMode = UIViewContentMode.ScaleAspectFit
-        phoneLoginBtn.addTarget(self, action: #selector(LeadingViewController.phoneLogin), forControlEvents: .TouchUpInside)
+        phoneLoginBtn.setImage(UIImage(named: "Iphone01"), for: UIControlState())
+        phoneLoginBtn.contentMode = UIViewContentMode.scaleAspectFit
+        phoneLoginBtn.addTarget(self, action: #selector(LeadingViewController.phoneLogin), for: .touchUpInside)
         
+        print(isWechatInstall)
         
-        let wechatLoginBtn = UIButton(frame: CGRect(x: iconPadding + iconWidth + iconGap,y:  startingHeight, width: iconWidth, height: iconWidth))
-        wechatLoginBtn.setImage(UIImage(named: "Wechat01"), forState: .Normal)
-        wechatLoginBtn.contentMode = UIViewContentMode.ScaleAspectFit
-        wechatLoginBtn.addTarget(self, action: #selector(LeadingViewController.wechatLogin), forControlEvents: .TouchUpInside)
+        if isWechatInstall{
+            let wechatLoginBtn = UIButton(frame: CGRect(x: iconPadding + iconWidth + iconGap,y:  startingHeight, width: iconWidth, height: iconWidth))
+            wechatLoginBtn.setImage(UIImage(named: "Wechat01"), for: UIControlState())
+            wechatLoginBtn.contentMode = UIViewContentMode.scaleAspectFit
+            wechatLoginBtn.addTarget(self, action: #selector(LeadingViewController.wechatLogin), for: .touchUpInside)
+            
+            view.addSubview(wechatLoginBtn)
+        }
+
         
-        let fbLoginBtn = UIButton(frame: CGRect(x: iconPadding + iconWidth * 2 + iconGap * 2, y: startingHeight, width: iconWidth, height: iconWidth))
-        fbLoginBtn.setImage(UIImage(named: "Facebook01"), forState: .Normal)
-        fbLoginBtn.contentMode = UIViewContentMode.ScaleAspectFit
-        fbLoginBtn.addTarget(self, action: #selector(LeadingViewController.fbLogin), forControlEvents: .TouchUpInside)
+        let fbLoginBtn = UIButton(frame: CGRect(x: iconPadding + iconWidth * (iconNum - 1) + iconGap * (iconNum - 1), y: startingHeight, width: iconWidth, height: iconWidth))
+        fbLoginBtn.setImage(UIImage(named: "Facebook01"), for: UIControlState())
+        fbLoginBtn.contentMode = UIViewContentMode.scaleAspectFit
+        fbLoginBtn.addTarget(self, action: #selector(LeadingViewController.fbLogin), for: .touchUpInside)
  
 
         
         view.addSubview(phoneLoginBtn)
-        view.addSubview(wechatLoginBtn)
         view.addSubview(fbLoginBtn)
     }
         
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        navigationController?.navigationBar.hidden = false
+        navigationController?.navigationBar.isHidden = false
         clearSession()
         //checkLogin()
         //verisonChecker()
@@ -74,7 +89,7 @@ class LeadingViewController: BasicViewController{
         
 
     func checkLogin(){
-        if let user_email = localStorage.objectForKey(localStorageKeys.UserEmail), let _ = localStorage.objectForKey(localStorageKeys.UserPhone), let _ = localStorage.objectForKey(localStorageKeys.UserPwd)  {
+        if let user_email = localStorage.object(forKey: localStorageKeys.UserEmail), let _ = localStorage.object(forKey: localStorageKeys.UserPhone), let _ = localStorage.object(forKey: localStorageKeys.UserPwd)  {
             finishLoginAlert("Welcome", message: user_email as! String + " is successfully login")
         }
     }
