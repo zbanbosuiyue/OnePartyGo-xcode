@@ -234,7 +234,8 @@ extension CameraViewController:  AVCaptureVideoDataOutputSampleBufferDelegate{
                             let delayTime = DispatchTime.now() + Double(Int64(delay)) / Double(NSEC_PER_SEC)
                             DispatchQueue.main.asyncAfter(deadline: delayTime, execute: {
                                 hud?.dismiss()
-                                self.navigationController?.popViewController(animated: true)
+                                print(self.navigationController?.childViewControllers)
+                                _ = self.navigationController?.popViewController(animated: true)
                             })
                         } else{
                             hud?.textLabel.text = "QRCode not valid"

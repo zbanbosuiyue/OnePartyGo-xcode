@@ -11,6 +11,7 @@ import WebKit
 import FBSDKShareKit
 import ImagePicker
 import JGProgressHUD
+import Alamofire
 
 class MainBasicViewController: BasicViewController {
     
@@ -85,23 +86,19 @@ class MainBasicViewController: BasicViewController {
     
     func refreshCache(){
         userImageView = UIImageView(frame: CGRect(x: 10, y: 10, width: 80, height: 80))
-        
-        userImageView.image = UIImage(named: "default");
-        
+    
         if let userHeadImageNSData = localStorage.object(forKey: localStorageKeys.UserHeadImage){
             let userHeadImage = UIImage(data: userHeadImageNSData as! Data)
             userImageView.image = userHeadImage
-        }else{
-            if let url = localStorage.object(forKey: localStorageKeys.UserHeadImageURL){
+        }else if let url = localStorage.object(forKey: localStorageKeys.UserHeadImageURL){
                 userImageView.imageFromServerURL(url as! String, completion: { (Detail, Success) in
                 })
-            }
-            if let user_email = localStorage.object(forKey: localStorageKeys.UserEmail) as? String {
+        }else if let user_email = localStorage.object(forKey: localStorageKeys.UserEmail) as? String {
                 let imageUrl = BaseURL + "api/uploads/" + "\(user_email).png"
                 userImageView.imageFromServerURL(imageUrl, completion: { (Detail, Success) in
                 })
-            }
-
+        } else{
+            userImageView.image = UIImage(named: "default")
         }
     }
     
@@ -297,9 +294,8 @@ class MainBasicViewController: BasicViewController {
     /* ----         MainWebView Section     ---- */
     /// Set MainWebView
     func setKKMainWebView(){
-        let jScript: String = "var meta = document.createElement('meta'); meta.setAttribute('name', 'viewport'); meta.setAttribute('content', 'width=\(AppWidth)'); document.getElementsByTagName('head')[0].appendChild(meta);"
-        
-        mainWebView = WKWebView(frame: CGRect(x: 0, y: 0, width: AppWidth, height: AppHeight), configuration: setWebConfigByJS(jScript))
+
+        mainWebView = WKWebView(frame: CGRect(x: 0, y: 0, width: AppWidth, height: AppHeight))
         
         mainWebView.addObserver(self, forKeyPath: "estimatedProgress", options: .new, context: nil)
         mainWebView.navigationDelegate = self
@@ -384,6 +380,11 @@ class MainBasicViewController: BasicViewController {
             hud.indicatorView.progress = Float(mainWebView.estimatedProgress)
         }
     }
+    deinit {
+        if mainWebView != nil{
+            mainWebView.removeObserver(self, forKeyPath: "estimatedProgress")
+        }
+    }
     
 }
 
@@ -426,7 +427,7 @@ extension MainBasicViewController: UIScrollViewDelegate, TableMenuDelegate, WKNa
                     showQRPage()
                 case .homeBtn:
                     gotoURL(URLSelector.home)
-                case .login:
+                case .loginBtn:
                     gotoLoginPage()
                 case .checkoutBtn:
                     gotoURL(URLSelector.checkout)
@@ -463,19 +464,17 @@ extension MainBasicViewController: UIScrollViewDelegate, TableMenuDelegate, WKNa
     func logoutApp(){
         closingMainMenu()
         isInit = true
+        isRegularLogin = false
         /// delete cookies
         let storage = HTTPCookieStorage.shared
         for cookie in storage.cookies! {
             storage.deleteCookie(cookie)
         }
         clearSession()
-        print("Login = \(checkUserLogin())")
         clearCache()
-        
-        
-        refreshCache()
-        initViews()
         CurrentURL = nil
+        
+        self.myPushViewController(vc: LeadingViewController(), animated: true)
     }
     
     
@@ -484,7 +483,7 @@ extension MainBasicViewController: UIScrollViewDelegate, TableMenuDelegate, WKNa
         if Platform.isSimulator{
             showAlertDoNothing("Not Found Camera", message: "Check your device or your are running in a simulator")
         } else{
-            navigationController?.pushViewController(CameraViewController(), animated: true)
+            self.myPushViewController(vc: CameraViewController(), animated: true)
         }
     }
     
@@ -497,7 +496,7 @@ extension MainBasicViewController: UIScrollViewDelegate, TableMenuDelegate, WKNa
             let imagePickerVC = ImagePickerController()
             imagePickerVC.imageLimit = 1
             imagePickerVC.delegate = self
-            self.navigationController?.pushViewController(imagePickerVC, animated: true)
+            self.myPushViewController(vc: imagePickerVC, animated: true)
         }else{
             showAlertDoNothing("Not login", message: "Please login first")
         }
@@ -554,19 +553,32 @@ extension MainBasicViewController: UIScrollViewDelegate, TableMenuDelegate, WKNa
     
     func gotoURL(_ url:String){
         if url == BaseURL{
-            mainWebView.load(URLRequest(url: URL(string: url)!))
+            self.mainWebView.load(URLRequest(url: URL(string: url)!))
             CurrentURL = url
         }else if url.contains("http"){
-            mainWebView.load(URLRequest(url: URL(string: url)!))
-            CurrentURL = url
-        }else{
+            hud.show(in: self.mainWebView)
             
-            mainWebView.load(URLRequest(url: URL(string: BaseURL + url)!))
+            Alamofire.request(url).validate().responseData { response in
+                switch response.result{
+                case .failure(let error):
+                    self.showAlertDoNothing("Error", message: "URL is not valid Or URL can't reach")
+                    print(error)
+                case .success:
+                    self.mainWebView.load(URLRequest(url: URL(string: url)!))
+                    CurrentURL = url
+                    print(CurrentURL)
+                }
+                self.hud.dismiss()
+            }
+            
+        }else{
+            self.mainWebView.load(URLRequest(url: URL(string: BaseURL + url)!))
             CurrentURL = BaseURL + url
         }
-        print(CurrentURL)
         closeAllMenu()
     }
+ 
+    
     
     func gotoURL(_ url: URLSelector){
         let urlString = url.rawValue
@@ -634,30 +646,12 @@ extension MainBasicViewController: UIScrollViewDelegate, TableMenuDelegate, WKNa
     
     func gotoLoginPage(){
         closeAllMenu()
+        print("gotoLoginPage")
+        print(self.navigationController)
+        print(self.navigationController?.childViewControllers)
         
-        self.navigationController?.pushViewController(LeadingViewController(), animated: true)
-        /*
-        let alertController = UIAlertController(title: "请选择登陆方式", message: nil, preferredStyle: .Alert)
-        alertController.addAction(UIAlertAction(title: "手机", style: .Default, handler: {(UIAlertAction) in
-             self.navigationController?.pushViewController(CreatePhoneViewController(), animated: true)
-        }))
-        alertController.addAction(UIAlertAction(title: "微信", style: .Default, handler: {(UIAlertAction) in
-            weChatLogin(self)
-        }))
+        _ = self.navigationController?.popViewController(animated: true)
         
-        alertController.addAction(UIAlertAction(title: "Facebook", style: .Default, handler: {(UIAlertAction) in
-            facebookLogin(self)
-        }))
-        
-        alertController.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: {(UIAlertAction) in
-            facebookLogin(self)
-        }))
-        
-        dispatch_async(dispatch_get_main_queue(), {
-            self.presentViewController(alertController, animated: true, completion: nil)
-        })
-         */
-
     }
     
     func initViews(){
@@ -665,7 +659,12 @@ extension MainBasicViewController: UIScrollViewDelegate, TableMenuDelegate, WKNa
         setMainMenuView()
         setMoreMenu()
         setKKMainWebView()
-        gotoURL(BaseURL)
+        if CurrentURL != nil{
+            gotoURL(CurrentURL)
+        } else{
+            gotoURL(BaseURL)
+        }
+        
         verisonChecker()
         refreshCache()
     }
@@ -735,6 +734,7 @@ extension MainBasicViewController: UIScrollViewDelegate, TableMenuDelegate, WKNa
             })
         }
     }
+
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)

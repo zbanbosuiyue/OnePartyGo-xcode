@@ -47,20 +47,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WXApiDelegate {
     
     
     func showLeadPage()-> UIViewController{
-        let nvc = BaseNavigationController(rootViewController: MainViewController())
+        var nvc = BaseNavigationController(rootViewController: MainViewController())
         print(localStorage.object(forKey: localStorageKeys.WeChatAccessToken))
         print(localStorage.object(forKey: localStorageKeys.FBAccessToken))
         print(localStorage.object(forKey: localStorageKeys.EmailPwdAccessToken))
 
-        /*
-        if let _ = localStorage.objectForKey(localStorageKeys.WeChatAccessToken){
-        } else if let _ = localStorage.objectForKey(localStorageKeys.FBAccessToken){
-        } else if let _ = localStorage.objectForKey(localStorageKeys.EmailPwdAccessToken){
-        } else if let _ = localStorage.objectForKey(localStorageKeys.PhoneAccessToken){
+        if let _ = localStorage.object(forKey: localStorageKeys.WeChatAccessToken){
+        } else if let _ = localStorage.object(forKey: localStorageKeys.FBAccessToken){
+        } else if let _ = localStorage.object(forKey: localStorageKeys.EmailPwdAccessToken){
+        } else if let _ = localStorage.object(forKey: localStorageKeys.PhoneAccessToken){
         } else{
             nvc = BaseNavigationController(rootViewController: LeadingViewController())
         }
-         */
+        
 
         return nvc
     }
@@ -131,7 +130,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WXApiDelegate {
         for i in 0..<deviceToken.count {
             token = token + String(format: "%02.2hhx", arguments: [deviceToken[i]])
         }
-        print(token)
+        localStorage.set(token, forKey: localStorageKeys.DeviceToken)
     }
     
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {

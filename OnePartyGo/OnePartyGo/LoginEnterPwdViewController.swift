@@ -38,18 +38,12 @@ class LoginEnterPwdViewController: BasicViewController, UITextFieldDelegate {
     
     @IBAction func ClickLoginBtn(_ sender: AnyObject) {
         let pwd = LoginPwdTextField.text!
-        
         if let email = localStorage.object(forKey: localStorageKeys.UserEmail){
             WPEmailPwdLogin(email as! String, pwd: pwd)
         }else{
             self.createProfileAlert()
         }
-        
-        
-        
     }
-    
-
     
     func closeKeyboard(){
         LoginPwdTextField.resignFirstResponder()

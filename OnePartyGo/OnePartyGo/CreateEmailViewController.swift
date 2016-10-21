@@ -37,9 +37,17 @@ class CreateEmailViewController: BasicViewController, UITextFieldDelegate{
         
         checkIfInfoExist("user_email", info_value: email) { (Detail, Exist) in
             if Exist{
-                self.showAlertDoNothing("This email \(email) already registerred", message: "Please use other email.")
+                if isRegularLogin{
+                    self.myPushViewController(vc: LoginEnterPwdViewController(), animated: true)
+                } else{
+                    self.showAlertDoNothing("This email \(email) already registerred", message: "Please use other email.")
+                }
             } else{
-                self.createProfileAlert()
+                if isRegularLogin{
+                    self.showAlertDoNothing("Email not found", message: "Please try again.")
+                } else{
+                    self.createProfileAlert()
+                }
             }
         }
         

@@ -16,14 +16,19 @@ class MainViewController: MainBasicViewController{
         super.viewDidLoad()
         initViews()
         refreshCache()
-        print("viewDidLoad")
-        print(restorationIdentifier)
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         if QRMessage != nil{
-            gotoURL(QRMessage)
+            if QRMessage.contains("Too Many"){
+                showAlertDoNothing("Error", message: QRMessage)
+                QRMessage = nil
+            }else{
+                gotoURL(QRMessage)
+            }
+            
         }
         self.navigationController?.navigationBar.isHidden = false
     }

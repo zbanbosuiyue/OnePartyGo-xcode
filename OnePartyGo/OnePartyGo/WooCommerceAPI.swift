@@ -36,16 +36,20 @@ extension UIViewController{
         
         
         Alamofire.request(url, method: .get, parameters: parameters as? Parameters)
-            .responseJSON { response in
-                
-                let data = response.result.value as! [String: AnyObject]
-                if let _ = data["exist"] as? Bool{
-                    print("User Already Exists")
-                } else{
-                    if let phone_access_token = data["phone_access_token"] as? String{
-                        localStorage.set(phone_access_token, forKey: localStorageKeys.PhoneAccessToken)
+            .validate().responseJSON { response in
+                switch response.result {
+                case .success:
+                    let data = response.result.value as! [String: AnyObject]
+                    if let _ = data["exist"] as? Bool{
+                        print("User Already Exists")
+                    } else{
+                        if let phone_access_token = data["phone_access_token"] as? String{
+                            localStorage.set(phone_access_token, forKey: localStorageKeys.PhoneAccessToken)
+                        }
+                        self.finishLoginAlert("Success", message: "\(email) has successfully login")
                     }
-                    self.finishLoginAlert("Success", message: "\(email) has successfully login")
+                case .failure(let error):
+                    print(error)
                 }
         }
     }
@@ -59,49 +63,51 @@ extension UIViewController{
         hud?.show(in: view, animated: true)
 
         Alamofire.request(url, method: .get, parameters: ["wechat_response_code" : response_code])
-            .responseJSON { response in
-                print(response.result.value)
-                let data = NSMutableDictionary(dictionary: response.result.value! as! NSDictionary)
-                if let userExist = data["user_exist"] as? Bool{
-                    print("afsdf")
-                    print(userExist)
-                    if userExist == true{
-                        print("bdfsf")
-                        /// Old WeChat User Let them login
-                        if let wechat_openid = data["open_id"], let access_token = data["access_token"], let user_email = data["user_email"]{
-                            localStorage.set(user_email, forKey: localStorageKeys.UserEmail)
-                            localStorage.set(access_token, forKey: localStorageKeys.WeChatAccessToken)
-                            localStorage.set(wechat_openid, forKey: localStorageKeys.WeChatOpenId)
-                            
-                            self.navigationController?.pushViewController(MainViewController(), animated: true)
-                        }
-                    } else{
-                        if userExist{
-                            print("afefeeefe")
+            .validate().responseJSON { response in
+                hud?.dismiss()
+                
+                switch response.result {
+                case .success:
+                    print(response.request)
+                    print(response.result.value)
+                    let data = NSMutableDictionary(dictionary: response.result.value! as! NSDictionary)
+                    if let userExist = data["user_exist"] as? Bool{
+                        print(userExist)
+                        if userExist == true{
+                            /// Old WeChat User Let them login
+                            if let wechat_openid = data["open_id"], let access_token = data["access_token"], let user_email = data["user_email"] {
+                                localStorage.set(user_email, forKey: localStorageKeys.UserEmail)
+                                localStorage.set(access_token, forKey: localStorageKeys.WeChatAccessToken)
+                                localStorage.set(wechat_openid, forKey: localStorageKeys.WeChatOpenId)
+                                print("getWechatInfo")
+                                print(self.navigationController?.childViewControllers)
+                                self.myPushViewController(vc: MainViewController(), animated: true)
+                            }
+                        } else{
                             /// New WeChat User
                             let wechat_access_token = data["access_token"]
                             let wechat_open_id = data["openid"]
                             let wechat_headImage_url = data["headimgurl"]
-                            
-                                
-                           
+
                             localStorage.set(wechat_access_token, forKey: localStorageKeys.WeChatAccessToken)
                             localStorage.set(wechat_open_id, forKey: localStorageKeys.WeChatOpenId)
                             localStorage.set(wechat_headImage_url, forKey: localStorageKeys.UserHeadImageURL)
                             localStorage.set(data, forKey: localStorageKeys.WeChatUserInfo)
                             
-                            print("kkk")
-                            
                             DispatchQueue.main.async(execute: { 
                                 self.loginProfileCheck()
                             })
                         }
+                    } else{
+                        
+                        self.showAlertDoNothing("Error", message: "Fail to connect WeChat")
+                        print(response.result.value)
                     }
-                }else{
-                    print("wooew")
+                case .failure(let error):
+                    print(error)
                 }
-                print("asafewe")
         }
+        
 
     }
     
@@ -112,25 +118,28 @@ extension UIViewController{
         let url = BaseURL + "api/wp-api.php?"
         
         Alamofire.request(url, method: .get, parameters: ["fb_id": fb_id])
-            .responseJSON { response in
-                
-                
-                let data = response.result.value as! [String: AnyObject]
-                print(response.request)
-                print(data)
-                if let fb_access_token = data["fb_access_token"] as? String{
-                    localStorage.set(fb_access_token, forKey: localStorageKeys.FBAccessToken)
-                    self.navigationController?.pushViewController(MainViewController(), animated: true)
-                }
-                else{
-                    if let email = localStorage.object(forKey: localStorageKeys.UserEmail){
-                        self.createProfileAlert("Setup Phone", message: "\(email) please setup your phone for future login.")
-                    }else{
-                        self.createProfileAlert()
+            .validate().responseJSON { response in
+                switch response.result {
+                case .success:
+                    let data = response.result.value as! [String: AnyObject]
+                    print(response.request)
+                    print(data)
+                    if let fb_access_token = data["fb_access_token"] as? String{
+                        localStorage.set(fb_access_token, forKey: localStorageKeys.FBAccessToken)
+                        self.myPushViewController(vc: MainViewController(), animated: true)
                     }
-                }
+                    else{
+                        if let email = localStorage.object(forKey: localStorageKeys.UserEmail){
+                            self.createProfileAlert("Setup Phone", message: "\(email) please setup your phone for future login.")
+                        }else{
+                            self.createProfileAlert()
+                        }
+                    }
+                case .failure(let error):
+                    print(error)
             }
         }
+    }
 
 
 
@@ -140,23 +149,27 @@ extension UIViewController{
         
         
         Alamofire.request(url, method: .get, parameters: ["phone_number": phone_number])
-            .responseJSON { response in
-                
+            .validate().responseJSON { response in
+            switch response.result {
+            case .success:
                 print(response.request)
                 let data = response.result.value! as! [String: AnyObject]
                 if let phone_access_token = data["phone_access_token"] as? String{
                     localStorage.set(phone_access_token, forKey: localStorageKeys.PhoneAccessToken)
-                    self.navigationController?.pushViewController(MainViewController(), animated: true)
+                    self.myPushViewController(vc: MainViewController(), animated: true)
                 }
                 else{
                     print("Not found acccess token")
                 }
+            case .failure(let error):
+            print(error)
             }
+        }
     }
-    
-    
-    
-    
+
+
+
+
     public func updateUserInfo(_ user_phone: String){
         let url = BaseURL + "/api/wp-update-info.php"
         
@@ -188,14 +201,18 @@ extension UIViewController{
         }
 
         Alamofire.request(url, method: .get, parameters: customerInfo)
-            .responseJSON { response in
-                
-                print(response.request)
-                let data = response.result.value as! [String:Any]
-                if let _ = data["Exist"] as? Bool{
-                    self.showAlertDoNothing("Found phone number in database", message: "Updated your info")
-                } else{
-                    self.showAlertDoNothing("Error", message: "Phone not found in DB.")
+            .validate().responseJSON { response in
+                switch response.result {
+                case .success:
+                    print(response.request)
+                    let data = response.result.value as! [String:Any]
+                    if let _ = data["Exist"] as? Bool{
+                        self.showAlertDoNothing("Found phone number in database", message: "Updated your info")
+                    } else{
+                        self.showAlertDoNothing("Error", message: "Phone not found in DB.")
+                    }
+                case .failure(let error):
+                    print(error)
                 }
         }
     }
@@ -238,20 +255,28 @@ extension UIViewController{
     public func checkIfInfoExist(_ info_key: String, info_value: String,  completion: @escaping (_ Detail: String, _ String: Bool) -> Void){
         let url = BaseURL + "api/wp-verify.php?"
         
-        Alamofire.request(url, method: .get, parameters: [info_key: info_value])
-            .responseJSON { response in
-                
+        let hud = JGProgressHUD(style: .light)
+        hud?.textLabel.text = "Checking email"
+        hud?.show(in: view, animated: true)
 
-                let data = response.result.value as! [String: Any]
-                if let _ = data["exist"] as? Bool{
-                    if let user_email = data["user_email"] as? String{
-                        completion(user_email, true)
-                        localStorage.set(user_email, forKey: localStorageKeys.UserEmail)
-                    }else{
-                        completion("Phone exists, but email not found", true)
+        Alamofire.request(url, method: .get, parameters: [info_key: info_value])
+            .validate().responseJSON { response in
+                hud?.dismiss()
+                switch response.result {
+                case .success:
+                    let data = response.result.value as! [String: Any]
+                    if let _ = data["exist"] as? Bool{
+                        if let user_email = data["user_email"] as? String{
+                            completion(user_email, true)
+                            localStorage.set(user_email, forKey: localStorageKeys.UserEmail)
+                        }else{
+                            completion("Phone exists, but email not found", true)
+                        }
+                    } else{
+                        completion("Network Problem", false)
                     }
-                } else{
-                    completion("Network Problem", false)
+                case .failure(let error):
+                    print(error)
                 }
             }
     }
@@ -265,9 +290,17 @@ extension UIViewController{
             "pwd" : pwd
         ]
         
+        
+        let hud = JGProgressHUD(style: .light)
+        hud?.textLabel.text = "Try to login"
+        hud?.show(in: view, animated: true)
+        
         Alamofire.request(url, method: .get, parameters: parameters)
-            .responseJSON { response in
+            .validate().responseJSON { response in
                 
+            hud?.dismiss()
+            switch response.result {
+            case .success:
                 
                 let data = response.result.value as! [String: Any]
                 if let _ = data["error"] as? String{
@@ -276,12 +309,15 @@ extension UIViewController{
                     if let email_pwd_access_token = data["email_pwd_access_token"] as? String{
                         localStorage.set(email_pwd_access_token, forKey: localStorageKeys.EmailPwdAccessToken)
                         print(email_pwd_access_token)
-                        self.navigationController?.pushViewController(MainViewController(), animated: true)
+                        self.myPushViewController(vc: MainViewController(), animated: true)
                     }else{
                         self.showAlertDoNothing("Network Problem", message: "Please check your connection")
                     }
                 }
+            case .failure(let error):
+            print(error)
             }
+        }
     }
 }
 

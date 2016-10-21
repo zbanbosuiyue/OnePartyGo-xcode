@@ -26,7 +26,7 @@ class CreatePhoneViewController: BasicViewController {
                         
                         let alertController = UIAlertController(title: "Phone already used by other account", message: "Do you want to login through this email: \(email)?", preferredStyle: .alert)
                         alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: {(UIAlertAction) in
-                            self.navigationController!.pushViewController(LoginEnterPwdViewController(), animated: true)
+                            self.myPushViewController(vc: LoginEnterPwdViewController(), animated: true)
                         }))
                         alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: {(UIAlertAction) in
                             

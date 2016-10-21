@@ -36,6 +36,7 @@ public var WCNonce: String! = nil
 public var CurrentURL: String! = nil
 public var isUserInApiTable = false
 public var isInit = true
+public var isRegularLogin = false
 
 
 public let BaseURL = "https://www.onepartygo.com/"
@@ -91,11 +92,9 @@ public func removeLocalStorage(){
 }
 
 public func clearCookies(){
-    _ = HTTPCookie.self
-    let cookieJar = HTTPCookieStorage.shared
-    
-    for cookie in cookieJar.cookies! {
-        cookieJar.deleteCookie(cookie)
+    let storage = HTTPCookieStorage.shared
+    for cookie: HTTPCookie in storage.cookies! {
+        storage.deleteCookie(cookie)
     }
 }
 
@@ -123,6 +122,9 @@ public func attributedString(from string: String, nonBoldRange: NSRange?) -> NSA
 
 
 struct localStorageKeys {
+    static let DeviceToken = "device_token"
+    static let DeviceInfo = "device_info"
+    
     static let WeChatAccessToken = "wechat_access_token"
     static let WeChatRefreshToken = "wechat_refresh_token"
     static let WeChatOpenId = "wechat_open_id"
@@ -174,7 +176,7 @@ enum MainButtonNameSelector: Int{
 }
 
 enum MainButtonWithoutLoginNameSelector: Int{
-    case scanQRBtn = 0, login, homeBtn, checkoutBtn, cartBtn, logotBtn
+    case scanQRBtn = 0, loginBtn, homeBtn, checkoutBtn, cartBtn, logotBtn
 }
 
 enum MoreButtonNameSelector: Int{

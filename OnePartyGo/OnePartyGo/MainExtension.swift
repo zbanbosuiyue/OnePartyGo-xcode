@@ -29,8 +29,21 @@ extension UIColor {
 
 
 extension UIViewController {
+    func myPushViewController(vc: UIViewController, animated: Bool){
+        for _vc in (self.navigationController?.childViewControllers)! {
+            let className = NSStringFromClass(vc.classForCoder)
+            let _className = NSStringFromClass(_vc.classForCoder)
+            if className == _className {
+                _ = self.navigationController?.popToViewController(_vc, animated: animated)
+                return
+            }
+        }
+        self.navigationController?.pushViewController(vc, animated: animated)
+    }
+    
+    
     func finishLogin(_ actionTarget: UIAlertAction){
-        self.navigationController?.pushViewController(MainViewController(), animated: true)
+        self.myPushViewController(vc: MainViewController(), animated: true)
     }
 
     func createProfileAlert(){
@@ -45,6 +58,7 @@ extension UIViewController {
         } else if let email = localStorage.object(forKey: localStorageKeys.UserEmail) as? String{
             /// Email ready, setup phone ///
             self.createProfileAlert("Setup Phone", message: email + " Please setup your phone number.")
+            
         } else{
             /// Setup email ///
             DispatchQueue.main.async
@@ -61,7 +75,6 @@ extension UIViewController {
     
     
     func loginProfileCheck(){
-        print(localStorage.object(forKey: localStorageKeys.UserEmail))
         if let FBUserInfo = localStorage.object(forKey: localStorageKeys.FBUserInfo) as? [String: AnyObject]{
             if let userHeadImageURL = FBUserInfo["picture"] as? String{
                 localStorage.set(userHeadImageURL, forKey: localStorageKeys.UserHeadImageURL)
@@ -71,17 +84,20 @@ extension UIViewController {
             }
         }
         
-        print(localStorage.object(forKey: localStorageKeys.UserEmail))
         ///Check if email and phone all setup
-        if let email = localStorage.object(forKey: localStorageKeys.UserEmail), let phone = localStorage.object(forKey: localStorageKeys.UserPhone), let pwd = localStorage.object(forKey: localStorageKeys.UserPwd){
-            let email = email as! String
-            let phone = phone as! String
-            let pwd = pwd as! String
+        if let email = localStorage.object(forKey: localStorageKeys.UserEmail) as? String, let phone = localStorage.object(forKey: localStorageKeys.UserPhone) as? String, let pwd = localStorage.object(forKey: localStorageKeys.UserPwd) as? String{
+            let email = email
+            let phone = phone
+            let pwd = pwd
             
             createAppApiUser(email, phone: phone, pwd: pwd)
         } else{
             /// New Customer
-            createProfileAlert()
+            if isRegularLogin, let email = localStorage.object(forKey: localStorageKeys.UserEmail) as? String, let pwd = localStorage.object(forKey: localStorageKeys.UserPwd) as? String{
+                    createAppApiUser(email, phone: "Regular", pwd: pwd)
+            } else{
+                createProfileAlert()
+            }
         }
     }
 
@@ -109,36 +125,20 @@ extension UIViewController {
     func createProfileAlert(_ title: String, message: String){
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
 
-        if let nvc = self.navigationController{
-            alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: {(UIAlertAction) in
-                switch title{
-                case "New Customer":
-                    nvc.pushViewController(CreateEmailViewController(), animated: true)
-                case "Setup Password":
-                    nvc.pushViewController(CreatePasswordViewController(), animated: true)
-                case "Setup Phone":
-                    nvc.pushViewController(CreatePhoneViewController(), animated: true)
-                default:
-                    break
-                }
-                
-            }))
-        } else{
-            let nvc = self.childViewControllers.first?.navigationController
-            alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: {(UIAlertAction) in
-                switch title{
-                case "New Customer":
-                    nvc!.pushViewController(CreateEmailViewController(), animated: true)
-                case "Setup Password":
-                    nvc!.pushViewController(CreatePasswordViewController(), animated: true)
-                case "Setup Phone":
-                    nvc!.pushViewController(CreatePhoneViewController(), animated: true)
-                default:
-                    break
-                }
-                
-            }))
-        }
+        alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: {(UIAlertAction) in
+            switch title{
+            case "New Customer":
+                self.myPushViewController(vc: CreateEmailViewController(), animated: true)
+            case "Setup Password":
+                self.myPushViewController(vc: CreatePasswordViewController(), animated: true)
+            case "Setup Phone":
+                self.myPushViewController(vc: CreatePhoneViewController(), animated: true)
+            default:
+                break
+            }
+            
+        }))
+
         DispatchQueue.main.async(execute: {
             self.present(alertController, animated: true, completion: nil)
         })
@@ -148,7 +148,7 @@ extension UIViewController {
         let title = title
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: {(UIAlertAction) in
-            self.navigationController!.pushViewController(LoginEnterPwdViewController(), animated: true)
+            self.myPushViewController(vc: LoginEnterPwdViewController(), animated: true)
         }))
         
         DispatchQueue.main.async(execute: {
@@ -183,8 +183,9 @@ extension UIViewController {
         
         let url = BaseURL + "api/update.php"
         let parameter = ["app_version" : CurrentVersion]
-        Alamofire.request(url, method: .get, parameters: parameter)
-            .responseJSON { response in
+        Alamofire.request(url, method: .get, parameters: parameter).validate().responseJSON { response in
+            switch response.result {
+            case .success:
                 if let data = response.result.value as? [String: Any]{
                     if let _ = data["error"] as? String {
                         let isForceUpdate = data["is_force_update"] as! Bool
@@ -199,8 +200,29 @@ extension UIViewController {
                         
                     }
                 }
+            case .failure(let error):
+                print(error)
+            }
         }
+    
+        let modelName = UIDevice.current.modelName
+        let systemVersion = UIDevice.current.systemVersion
+        let systemName = UIDevice.current.systemName
         
+        let parameters = [
+            "model_name" : modelName,
+            "system_version" : systemVersion,
+            "system_name" : systemName
+        ]
+        
+        Alamofire.request(url, method: .get, parameters: parameters).validate().responseJSON { response in
+            switch response.result {
+            case .success:
+                print()
+            case .failure(let error):
+                print(error)
+            }
+        }
     }
     
     // Alert
@@ -255,6 +277,8 @@ extension UIImageView {
                     self.image = image
                     completion("" as AnyObject, true)
                 } else{
+                    let image = UIImage(named: "default")
+                    self.image = image
                     completion("Not Valid URL" as AnyObject, false)
                 }
                 self.contentMode = .scaleAspectFit
@@ -373,7 +397,50 @@ struct Platform {
     
     static var isSimulator: Bool {
         return TARGET_OS_SIMULATOR != 0 // Use this line in Xcode 7 or newer
-        return TARGET_IPHONE_SIMULATOR != 0 // Use this line in Xcode 6
+    }
+    
+}
+
+extension UIDevice {
+    
+    var modelName: String {
+        var systemInfo = utsname()
+        uname(&systemInfo)
+        let machineMirror = Mirror(reflecting: systemInfo.machine)
+        let identifier = machineMirror.children.reduce("") { identifier, element in
+            guard let value = element.value as? Int8, value != 0 else { return identifier }
+            return identifier + String(UnicodeScalar(UInt8(value)))
+        }
+        
+        switch identifier {
+        case "iPod5,1":                                 return "iPod Touch 5"
+        case "iPod7,1":                                 return "iPod Touch 6"
+        case "iPhone3,1", "iPhone3,2", "iPhone3,3":     return "iPhone 4"
+        case "iPhone4,1":                               return "iPhone 4s"
+        case "iPhone5,1", "iPhone5,2":                  return "iPhone 5"
+        case "iPhone5,3", "iPhone5,4":                  return "iPhone 5c"
+        case "iPhone6,1", "iPhone6,2":                  return "iPhone 5s"
+        case "iPhone7,2":                               return "iPhone 6"
+        case "iPhone7,1":                               return "iPhone 6 Plus"
+        case "iPhone8,1":                               return "iPhone 6s"
+        case "iPhone8,2":                               return "iPhone 6s Plus"
+        case "iPhone9,1", "iPhone9,3":                  return "iPhone 7"
+        case "iPhone9,2", "iPhone9,4":                  return "iPhone 7 Plus"
+        case "iPhone8,4":                               return "iPhone SE"
+        case "iPad2,1", "iPad2,2", "iPad2,3", "iPad2,4":return "iPad 2"
+        case "iPad3,1", "iPad3,2", "iPad3,3":           return "iPad 3"
+        case "iPad3,4", "iPad3,5", "iPad3,6":           return "iPad 4"
+        case "iPad4,1", "iPad4,2", "iPad4,3":           return "iPad Air"
+        case "iPad5,3", "iPad5,4":                      return "iPad Air 2"
+        case "iPad2,5", "iPad2,6", "iPad2,7":           return "iPad Mini"
+        case "iPad4,4", "iPad4,5", "iPad4,6":           return "iPad Mini 2"
+        case "iPad4,7", "iPad4,8", "iPad4,9":           return "iPad Mini 3"
+        case "iPad5,1", "iPad5,2":                      return "iPad Mini 4"
+        case "iPad6,3", "iPad6,4", "iPad6,7", "iPad6,8":return "iPad Pro"
+        case "AppleTV5,3":                              return "Apple TV"
+        case "i386", "x86_64":                          return "Simulator"
+        default:                                        return identifier
+        }
     }
     
 }

@@ -42,13 +42,139 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "OnePartyGo/MainBasicViewController.swift"
-            timestampString = "498599317.995147"
+            timestampString = "498771366.366609"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "625"
-            endingLineNumber = "625"
+            startingLineNumber = "637"
+            endingLineNumber = "637"
             landmarkName = "doneButtonDidPress(_:images:)"
             landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "OnePartyGo/MainExtension.swift"
+            timestampString = "498764987.812291"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "208"
+            endingLineNumber = "208"
+            landmarkName = "verisonChecker()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "OnePartyGo/MainBasicViewController.swift"
+            timestampString = "498771366.366609"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "541"
+            endingLineNumber = "541"
+            landmarkName = "shareToFB()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "OnePartyGo/AppDelegate.swift"
+            timestampString = "498762182.012963"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "59"
+            endingLineNumber = "59"
+            landmarkName = "showLeadPage()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "OnePartyGo/AppDelegate.swift"
+            timestampString = "498767119.062019"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "19"
+            endingLineNumber = "19"
+            landmarkName = "AppDelegate"
+            landmarkType = "3">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "OnePartyGo.AppDelegate.__deallocating_deinit"
+                  moduleName = "OnePartyGo"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/Miibox/Github/OnePartyGo-xcode/OnePartyGo/OnePartyGo/AppDelegate.swift"
+                  timestampString = "498767119.131153"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "0"
+                  endingLineNumber = "0"
+                  offsetFromSymbolStart = "4">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "OnePartyGo.AppDelegate.init () -&gt; OnePartyGo.AppDelegate"
+                  moduleName = "OnePartyGo"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/Miibox/Github/OnePartyGo-xcode/OnePartyGo/OnePartyGo/AppDelegate.swift"
+                  timestampString = "498767119.133859"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "21"
+                  endingLineNumber = "21"
+                  offsetFromSymbolStart = "19">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "OnePartyGo.AppDelegate.__allocating_init () -&gt; OnePartyGo.AppDelegate"
+                  moduleName = "OnePartyGo"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/Miibox/Github/OnePartyGo-xcode/OnePartyGo/OnePartyGo/AppDelegate.swift"
+                  timestampString = "498767119.136116"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "0"
+                  endingLineNumber = "0"
+                  offsetFromSymbolStart = "4">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "main"
+                  moduleName = "OnePartyGo"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/Miibox/Github/OnePartyGo-xcode/OnePartyGo/OnePartyGo/AppDelegate.swift"
+                  timestampString = "498767119.138368"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "19"
+                  endingLineNumber = "19"
+                  offsetFromSymbolStart = "22">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

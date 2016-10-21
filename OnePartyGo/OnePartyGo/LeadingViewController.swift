@@ -24,9 +24,12 @@ class LeadingViewController: BasicViewController{
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         definesPresentationContext = true
         
-        let backgroundImageView = UIImageView(frame: CGRect(x: AppWidth * 0.2, y: AppHeight * 0.2, width: AppWidth * 0.6, height: AppHeight * 0.5))
+        self.view.backgroundColor = UIColor.init(rgb: 0xfcfcfc)
+        
+        let backgroundImageView = UIImageView(frame: CGRect(x: AppWidth * (-0.08), y: AppHeight * 0.2, width: AppWidth * (1.15), height: AppHeight * 0.5))
         backgroundImageView.image = UIImage(named: "BigLogo")
         backgroundImageView.contentMode = .scaleAspectFit
         
@@ -72,14 +75,24 @@ class LeadingViewController: BasicViewController{
         fbLoginBtn.addTarget(self, action: #selector(LeadingViewController.fbLogin), for: .touchUpInside)
  
 
+        let normalLoginBtn = UIButton(frame: CGRect(x: (AppWidth * 0.6)/2, y: startingHeight - 0.1 * AppHeight, width: 0.3 * AppWidth, height: 0.05 * AppHeight))
+        let origImage = UIImage(named: "into_home")
+        let tintedImage = origImage?.withRenderingMode(.alwaysTemplate)
+        normalLoginBtn.setBackgroundImage(tintedImage, for: .normal)
+        normalLoginBtn.setTitle("Normal Login", for: .normal)
+        normalLoginBtn.setTitleColor(UIColor.black, for: .normal)
+        normalLoginBtn.tintColor = UIColor.init(rgb: 0x52a9fa)
+        normalLoginBtn.sizeToFit()
+        normalLoginBtn.addTarget(self, action: #selector(LeadingViewController.normalLogin), for: .touchUpInside)
         
         view.addSubview(phoneLoginBtn)
         view.addSubview(fbLoginBtn)
+        view.addSubview(normalLoginBtn)
     }
         
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        navigationController?.navigationBar.isHidden = false
+        navigationController?.navigationBar.isHidden = true
         clearSession()
         //checkLogin()
         //verisonChecker()
@@ -96,7 +109,7 @@ class LeadingViewController: BasicViewController{
     
     func phoneLogin(){
         //addChildViewController(FabricViewController())
-        self.navigationController?.pushViewController(CreatePhoneViewController(), animated: true)
+        self.myPushViewController(vc: CreatePhoneViewController(), animated: true)
     }
     
     func wechatLogin(){
@@ -108,10 +121,11 @@ class LeadingViewController: BasicViewController{
         facebookLogin(self)
     }
     
-    func sendPostToWC(){
-        self.navigationController?.pushViewController(CreateEmailViewController(), animated: true)
+    func normalLogin(){
+        isRegularLogin = true
+        self.myPushViewController(vc: CreateEmailViewController(), animated: true)
     }
-    
+
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
